@@ -1,0 +1,889 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;\f2\fmodern\fcharset0 Courier;
+}
+{\colortbl;\red255\green255\blue255;\red16\green16\blue16;\red255\green255\blue255;\red75\green78\blue95;
+\red206\green204\blue213;\red30\green31\blue33;\red183\green187\blue184;}
+{\*\expandedcolortbl;;\cssrgb\c7451\c7451\c7843;\cssrgb\c100000\c100000\c100000;\cssrgb\c36471\c38039\c44706;
+\cssrgb\c84314\c83922\c86667;\cssrgb\c15686\c16471\c17255;\cssrgb\c76863\c78039\c77255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Here is a detailed, comprehensive, and full description of the end-to-end Standard Operating Procedure (SOP) for this workflow:\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 1. Triggering the Workflow:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The process begins when a user sends a message via\'a0
+\f1\b Telegram
+\f0\b0 \'a0to the designated AI agent
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 1...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . Telegram serves as the chat interface to communicate with the automation
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 1
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 To establish this trigger, you first need a\'a0
+\f1\b Telegram account
+\f0\b0 \'a0which can be created for free on your phone and computer
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 Next, you need to create a\'a0
+\f1\b Telegram Bot
+\f0\b0 \'a0using\'a0
+\f1\b BotFather
+\f0\b0 \'a0within Telegram
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . Search for "BotFather" in Telegram and click "start"
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . Select "/newbot" and give your bot a name (e.g., "viral style video") and a bot username (e.g., "viralstylevideobot")
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 BotFather will provide you with an\'a0
+\f1\b API token
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 In\'a0
+\f1\b n8n
+\f0\b0 , the automation platform, you need to set up a\'a0
+\f1\b Telegram Trigger
+\f0\b0 \'a0node
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 1
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You will need to create\'a0
+\f1\b credentials
+\f0\b0 \'a0for Telegram in n8n using the API token received from BotFather
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 Once the credentials are saved and turn green, the Telegram trigger is active
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You can test the connection by clicking "Test workflow" in n8n and then starting a chat with your bot in Telegram and sending any message
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . A green checkmark in n8n indicates a successful connection
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 2. Input Processing and Splitting the Command:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The user's message in Telegram should follow a specific format to instruct the AI agent. The example format is: "
+\f1\b generate video
+\f0\b0 , [video description],\'a0
+\f1\b [caption text for the video]
+\f0\b0 "
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . For example: "generate video, a man running across a mountain ridge in the winter with camera position in aerial view, hey quick quick tip for trail runners in winter"
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 2...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The initial message received by the Telegram trigger in n8n will be a single block of text
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 3
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 To process the video description and caption text separately, a\'a0
+\f1\b Code Block
+\f0\b0 \'a0node is used in n8n
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 3
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 This code block contains a pre-prepared\'a0
+\f1\b split function
+\f0\b0 \'a0(potentially obtained from ChatGPT or provided in a resource document) that separates the incoming message into different parts based on the commas in the defined format
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 3
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The code block will output two distinct variables: "
+\f1\b video prompt
+\f0\b0 " (e.g., "a man running across a mountain ridge in the winter with camera position in aerial view") and "
+\f1\b caption idea
+\f0\b0 " (e.g., "hey quick quick tip for trail runners in winter")
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 3
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 3. Generating the Video Prompt for Cling AI:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The next step involves an\'a0
+\f1\b AI Agent
+\f0\b0 \'a0(using a "Message a Model" node in n8n, configured with OpenAI) that takes the "video prompt" from the previous step and refines it for the specific video generation tool,\'a0
+\f1\b Cling AI
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 3...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 You need to have an account with\'a0
+\f1\b OpenAI
+\f0\b0 \'a0and obtain an\'a0
+\f1\b API key
+\f0\b0 \'a0from platform.openai.com
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 4
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . This key needs to be configured as credentials in the OpenAI node in n8n
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 4
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . It might require adding a small amount of credit to your OpenAI account
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 4
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The AI agent is given a\'a0
+\f1\b system message
+\f0\b0 \'a0containing\'a0
+\f1\b custom instructions
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 3
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . These instructions define its role as a "prompt writing assistant for the texttovideo AI generator cling AI"
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 3...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The instructions tell the AI agent to take the short user input (the "video prompt") and generate an effective video generation prompt for Cling AI, including details about motion and camera angle, and provide examples
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 3...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 You need to select an\'a0
+\f1\b OpenAI model
+\f0\b0 \'a0in the node (e.g., GPT-4o for best results)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 4
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 (Optional)
+\f0\b0 \'a0You can add a\'a0
+\f1\b memory
+\f0\b0 \'a0component (like "Window Buffer Memory") to the AI agent to remember past interactions, but this is not used in the basic fully automated version described
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 4
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 (Optional)
+\f0\b0 \'a0You can also add\'a0
+\f1\b tools
+\f0\b0 \'a0for the AI agent to complete tasks, but these are not used in this basic workflow
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 4
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 A test run of this step will show the generated video prompt for Cling AI (e.g., "aerial view of a man in a red jacket black pants running along a snow mountain ridge")
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 5
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 4. Generating the Video with Cling AI (via pi API):
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 To generate the actual video, an\'a0
+\f1\b HTTP Request
+\f0\b0 \'a0node is used in n8n to interact with the\'a0
+\f1\b pi API
+\f0\b0 , which provides access to various AI tools including Cling AI
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 5
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 You need an account with\'a0
+\f1\b pi API
+\f0\b0 \'a0(available at pi.ai)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 5
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You can create a free account but may need to add credits for video generation
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 5
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . Obtain an\'a0
+\f1\b API key
+\f0\b0 \'a0from your pi API account
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 5
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The HTTP Request node is configured with the\'a0
+\f1\b POST
+\f0\b0 \'a0method and a specific\'a0
+\f1\b URL
+\f0\b0 \'a0for running the Cling AI API (found under "run API" for Cling AI)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 5
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Authentication
+\f0\b0 \'a0is set to "Generic Credential Type" with "Header Auth"
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 5
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You need to create new credentials, where the "Name" is "X-API-Key" and the "Value" is your pi API key
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 5...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b body
+\f0\b0 \'a0of the request is specified as\'a0
+\f1\b JSON
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 6
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . This JSON body contains the prompt generated by the AI agent, the desired video format (e.g., "9:16" for short-form videos), and the duration (e.g., 5 or 10 seconds)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 6
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . The video prompt is dynamically inserted from the output of the previous AI agent node
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 6
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 A\'a0
+\f1\b Wait
+\f0\b0 \'a0node is added after this step as video generation can take around\'a0
+\f1\b 5 to 6 minutes
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 6
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 5. Getting the Video URL:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 After the waiting period, another\'a0
+\f1\b HTTP Request
+\f0\b0 \'a0node with the\'a0
+\f1\b GET
+\f0\b0 \'a0method is used to retrieve the generated video URL from the pi API
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 6
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b URL
+\f0\b0 \'a0for this request is similar to the video generation URL but includes a specific\'a0
+\f1\b video ID
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 6
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Authentication
+\f0\b0 \'a0is again "Generic Credential Type" with "Header Auth" using the same pi API credentials
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 6
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b Response
+\f0\b0 \'a0option is set to\'a0
+\f1\b JSON
+\f0\b0 \'a0to parse the API response and extract the video URL
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 6
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 To get the correct video ID, you need to perform a test run of the video generation step first and then match the task ID from that response to this "get video URL" node
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 6...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 6. Generating the Voice-over with OpenAI:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 A second\'a0
+\f1\b "Message a Model" (OpenAI)
+\f0\b0 \'a0node is used to generate the voice-over text based on the "caption idea"
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 7
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The same OpenAI credentials and model (e.g., GPT-4) are selected
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 7
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b prompt
+\f0\b0 \'a0for this node instructs OpenAI to generate a voice-over text that is around 7-8 seconds long, based on the "caption idea"
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 7
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You might need to use specific syntax to access the "caption idea" output from the split function node (e.g.,\'a0
+\f2 \cf6 \cb7 \strokec6 \{\{$json["caption idea"]\}\}
+\f0 \cf2 \cb3 \strokec2 \'a0assuming the split function output is named appropriately)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 7
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 Testing this step will generate the voice-over text
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 7
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 7. Generating the Audio with OpenAI (Text-to-Speech):
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 A third\'a0
+\f1\b OpenAI
+\f0\b0 \'a0node is used, this time for\'a0
+\f1\b audio generation
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 You can select an audio model and a voice
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b text
+\f0\b0 \'a0input for this node is the\'a0
+\f1\b voice-over text
+\f0\b0 \'a0generated in the previous step
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 Testing this step will generate an\'a0
+\f1\b MP3 audio file
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 8. Uploading the Audio to Cloudinary:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 To use the audio file with the video, it needs to be uploaded to an online storage service.\'a0
+\f1\b Cloudinary
+\f0\b0 \'a0is used for this purpose
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You need to create a free account on cloudinary.com
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 An\'a0
+\f1\b HTTP Request
+\f0\b0 \'a0node with the\'a0
+\f1\b GET
+\f0\b0 \'a0method is used to interact with the Cloudinary API
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b URL
+\f0\b0 \'a0will include your Cloudinary\'a0
+\f1\b cloud name
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Authentication
+\f0\b0 \'a0is "Generic Credential Type" with "Basic Auth"
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You need to create new credentials using your Cloudinary\'a0
+\f1\b API key
+\f0\b0 \'a0as the username and your\'a0
+\f1\b API secret
+\f0\b0 \'a0as the password (found in your Cloudinary settings under API Keys)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You might need to confirm your email and enter a confirmation code in Cloudinary to access the API secret
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b Send Body
+\f0\b0 \'a0is set to "Form Data" with a "Binary File" parameter named "file". The "Input Data Field" should be set to "data" (the output of the OpenAI audio generation node)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 Another "Form Data" parameter named "
+\f1\b upload_preset
+\f0\b0 " is required
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You need to create an\'a0
+\f1\b unsigned upload preset
+\f0\b0 \'a0in your Cloudinary settings (under Upload Presets), give it a name, set the signing mode to "unsigned," and then use that preset name as the value in the n8n node
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 8
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 A test run will upload the audio file to Cloudinary and provide a\'a0
+\f1\b URL
+\f0\b0 \'a0to the uploaded audio
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 9. Merging Video and Audio using JSON to Video:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 To combine the video and the voice-over, another\'a0
+\f1\b HTTP Request
+\f0\b0 \'a0node with the\'a0
+\f1\b POST
+\f0\b0 \'a0method is used to interact with the\'a0
+\f1\b JSON to Video
+\f0\b0 \'a0API
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You need to get a free API key from their website
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b URL
+\f0\b0 \'a0for merging audio and video is provided in the resource document
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Authentication
+\f0\b0 \'a0is "Generic Credential Type" with "Custom Auth"
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You need to create new credentials by adding a JSON code snippet in the "Header" section, where you include your JSON to Video API key
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b Send Body
+\f0\b0 \'a0is set to\'a0
+\f1\b JSON
+\f0\b0 , containing a code structure that specifies the\'a0
+\f1\b video URL
+\f0\b0 \'a0(from step 5) and the\'a0
+\f1\b audio URL
+\f0\b0 \'a0(from step 8) to be merged
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . These URLs are dynamically inserted from the outputs of the respective previous nodes
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 A\'a0
+\f1\b Wait
+\f0\b0 \'a0node of around\'a0
+\f1\b 30 seconds
+\f0\b0 \'a0is added to allow time for the video and audio to be merged
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 10. Getting the Merged Video URL:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 Another\'a0
+\f1\b HTTP Request
+\f0\b0 \'a0node with the\'a0
+\f1\b GET
+\f0\b0 \'a0method is used to retrieve the URL of the video with the merged audio from JSON to Video
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b URL
+\f0\b0 \'a0for this request will likely involve a project ID related to the merging task
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . This ID needs to be dynamically extracted from the response of the previous "merge audio + video" step
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Authentication
+\f0\b0 \'a0is again "Generic" with "Custom Auth" using the JSON to Video credentials
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 9...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 A test run should provide the URL of the video with the voice-over
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 11. Generating Captions using JSON to Video:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 To add subtitles, another\'a0
+\f1\b HTTP Request
+\f0\b0 \'a0node with the\'a0
+\f1\b POST
+\f0\b0 \'a0method is used with the JSON to Video API
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b URL
+\f0\b0 \'a0for adding captions is different and provided in the resource document
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Authentication
+\f0\b0 \'a0is "Custom Auth" with your JSON to Video credentials
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b Send Body
+\f0\b0 \'a0is\'a0
+\f1\b JSON
+\f0\b0 , containing code that specifies the\'a0
+\f1\b video URL
+\f0\b0 \'a0(the one with the merged audio) and instructs the API to generate captions based on the audio track
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . This might involve using the audio URL or the project ID from the merged video
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 A\'a0
+\f1\b Wait
+\f0\b0 \'a0node of around\'a0
+\f1\b 20-30 seconds
+\f0\b0 \'a0is added for caption generation
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 12. Getting the Final Video URL with Captions:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 A final\'a0
+\f1\b HTTP Request
+\f0\b0 \'a0node with the\'a0
+\f1\b GET
+\f0\b0 \'a0method is used to retrieve the URL of the completed video with voice-over and captions from JSON to Video
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b URL
+\f0\b0 \'a0will again likely involve a project ID
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Authentication
+\f0\b0 \'a0is "Custom Auth" with your JSON to Video credentials
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 A test run should provide the URL of the final, fully processed video
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 13. Generating the Social Media Caption with OpenAI:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 A duplicated\'a0
+\f1\b "Message a Model" (OpenAI)
+\f0\b0 \'a0node is used to generate a social media caption based on the\'a0
+\f1\b voice-over text
+\f0\b0 \'a0generated earlier
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The prompt for this node will instruct OpenAI to create a short, engaging social media caption suitable for platforms like Instagram Reels, TikTok, and YouTube Shorts
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 10...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 14. Saving Information to Google Sheets:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 An\'a0
+\f1\b "Google Sheets Append Row"
+\f0\b0 \'a0node is used to save the generated video information and caption to a Google Sheet
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 11
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 You need to\'a0
+\f1\b connect your Google account
+\f0\b0 \'a0to n8n
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 11
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . Ensure it's the same account where your Google Sheet is located
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 11
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 Select your\'a0
+\f1\b Google Sheet
+\f0\b0 \'a0and the specific\'a0
+\f1\b worksheet
+\f0\b0 \'a0(e.g., "videos")
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 11
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Match the columns
+\f0\b0 \'a0in your Google Sheet (e.g., "video ID," "video URL," "caption text") with the corresponding output variables from the previous n8n nodes (e.g., the random ID generated, the final video URL, the social media caption)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 11
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 A\'a0
+\f1\b "powerful Google sheet template"
+\f0\b0 \'a0is recommended, which might include scripts to help with scheduling the publishing
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 11
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You might need to rename your sheet in n8n to match the actual name
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 11
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 15. Sending Telegram Notifications:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 A\'a0
+\f1\b Telegram "Send a Text Message"
+\f0\b0 \'a0node is used to send a confirmation message back to the user in Telegram once the video and caption have been generated and saved
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 11...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . This message can include the generated caption text and the video link
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 A\'a0
+\f1\b Telegram "Send a Video"
+\f0\b0 \'a0node can also be added to send the generated video directly to the user in Telegram for review
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You will need to select your Telegram account and use the initial chat ID and the final video URL
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 16. Publishing to Social Media (using Zapier):
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The publishing to TikTok, Instagram Reels, and YouTube Shorts is handled using\'a0
+\f1\b Zapier
+\f0\b0 , a separate automation platform
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . This is presented as a less technical alternative to doing it directly in n8n
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 You need a\'a0
+\f1\b Zapier account
+\f0\b0 \'a0(a free plan is available)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The\'a0
+\f1\b trigger
+\f0\b0 \'a0in Zapier is the\'a0
+\f1\b Google Sheet
+\f0\b0 \'a0you configured in the previous step
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You need to connect your Google account to Zapier and select the correct spreadsheet and worksheet
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . The trigger event is when a\'a0
+\f1\b "Schedule Date"
+\f0\b0 \'a0column in your Google Sheet is filled
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . This column is part of the provided Google Sheet template and is used to manage the posting schedule
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 12
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You might need to authorize the trigger
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 13
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 The next step in Zapier involves\'a0
+\f1\b Buffer
+\f0\b0 , a social media scheduling platform (buffer.com)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 13
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You need a\'a0
+\f1\b Buffer account
+\f0\b0 \'a0(a free plan with limitations and a paid plan with unlimited scheduling are mentioned)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 13...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . Connect your Buffer account to Zapier
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 13
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 For each social media platform (Instagram, TikTok, YouTube), you will set up a separate action in Zapier using the\'a0
+\f1\b Buffer "Add to Queue"
+\f0\b0 \'a0action
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 13
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . You need to connect your social media accounts to Buffer first
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 13
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 For\'a0
+\f1\b Instagram Reels
+\f0\b0 , you select the connected Instagram account as the channel, map the\'a0
+\f1\b caption text
+\f0\b0 \'a0from the Google Sheet to the "Text" field, the\'a0
+\f1\b video URL
+\f0\b0 \'a0to the "Video" field, set the "Share to Feed Method" to "Schedule Posts," and map the\'a0
+\f1\b schedule date
+\f0\b0 \'a0from the Google Sheet to the "Schedule Time" field
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 13
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . Test the step to send it to Buffer for scheduling
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 13
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 Similarly, for\'a0
+\f1\b TikTok
+\f0\b0 , you duplicate the Instagram step, select the connected TikTok account, map the caption and video URL, and schedule date
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 15
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 For\'a0
+\f1\b YouTube Shorts
+\f0\b0 , you duplicate the previous step, select the connected YouTube channel, map the caption and video URL, and schedule date. You also have the option to add a\'a0
+\f1\b title
+\f0\b0 \'a0(e.g., "Watch this") and select a\'a0
+\f1\b category
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 15
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\cb3 Once all the platforms are configured, turn the Zap "on" to activate the automated publishing process
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 15
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 . The videos will be scheduled in Buffer according to the dates in your Google Sheet
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 15...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 17. Cost Considerations:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The video outlines the costs associated with the various tools used
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 14...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Cling AI:
+\f0\b0 \'a0Approximately\'a0
+\f1\b 50 cents per video
+\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 14
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 OpenAI (caption and prompt generation):
+\f0\b0 \'a0A few cents per video
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 14
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 OpenAI (text-to-speech):
+\f0\b0 \'a0Even cheaper than caption generation
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 14
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Cloudinary:
+\f0\b0 \'a0Free for storage
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 14
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 JSON to Video:
+\f0\b0 \'a0Around\'a0
+\f1\b 10 credits per video
+\f0\b0 , translating to a small dollar amount
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 14
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Zapier:
+\f0\b0 \'a0The free plan has limitations (e.g., 100 tasks per month, which might be quickly used up when publishing to multiple platforms), so you might need to upgrade to a paid plan (e.g.,\'a0
+\f1\b $28/month
+\f0\b0 ) depending on the volume and number of platforms
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 14
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Buffer:
+\f0\b0 \'a0The free plan allows scheduling up to 10 videos. A paid plan (
+\f1\b $6/month
+\f0\b0 ) offers unlimited scheduling
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 14...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 n8n:
+\f0\b0 \'a0A\'a0
+\f1\b 14-day free trial
+\f0\b0 \'a0is available. After that, it costs\'a0
+\f1\b $24/month
+\f0\b0 \'a0for 2500 executions (one video generation being one execution)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 1...
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The total estimated cost varies based on the number of videos and the platforms you publish to
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 17
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 18. Budget-Friendly Options:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 The video suggests a\'a0
+\f1\b budget-friendly option
+\f0\b0 \'a0by removing the costs of n8n and/or Zapier
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 17
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Self-hosting n8n:
+\f0\b0 \'a0You can install n8n on your local computer to avoid the monthly fee, but this requires technical setup
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 17
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Manual publishing:
+\f0\b0 \'a0You can skip Zapier and manually download the videos from Telegram and upload them to each social media platform from your phone
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 17
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 Buffer free plan:
+\f0\b0 \'a0Use the free Buffer plan to schedule up to 10 videos in advance and then manually manage the scheduling
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 17
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\cb3 These budget options reduce the automation but also lower the costs significantly
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 17
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 19. Removing Watermarks and Continuous Operation:
+\f0\b0 \cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 JSON to Video Watermarks:
+\f0\b0 \'a0To remove watermarks, you need to purchase credits or a paid plan with JSON to Video (e.g., a prepaid plan for $49.95 for 7200 credits)
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 16
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 \'95\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b \cf2 \cb3 pi API Auto Top-up:
+\f0\b0 \'a0To ensure continuous video generation without interruptions, you can enable auto top-up for your pi API billing in the settings
+\f1\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf4 \cb5 \strokec4 16
+\f0\b0\fs28 \AppleTypeServices \cf2 \cb3 \strokec2 .\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb3 This detailed SOP covers the entire automated workflow as described in the YouTube transcript. Remember that specific steps and configurations might require adjustments based on updates to the platforms or your individual preferences.\cb1 \
+Automated}

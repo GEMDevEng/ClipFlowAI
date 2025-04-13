@@ -1,0 +1,192 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Below is a detailed list of tickets for the development of an AI-Powered Faceless Video Generation Platform. These tickets are designed for a project with no coding skills required, a $0 budget, and reliance on team support, utilizing no-code tools such as Bubble.io, RunwayML, and Zapier. The tickets are organized by phase, ensuring a systematic approach from setup to launch and beyond. Each ticket includes a title, description, priority, estimated effort, dependencies, and an assigned team member placeholder.\
+\
+---\
+\
+## Tickets for AI-Powered Faceless Video Generation Platform\
+\
+### Phase 1: Project Setup\
+This phase establishes the foundation for the project, aligning the team and defining the scope.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T1.1          | Review Project Requirements         | Review the project description and SOP to understand client needs and workflows.                  | High         | 2 hours              | None             | User            |\
+| T1.2          | Define Project Scope                | Document the MVP scope, including authentication, video creation, and publishing features.        | High         | 4 hours              | T1.1             | User + Team     |\
+| T1.3          | Set Up Project Management Tool      | Configure Trello or Asana (free plan) for task tracking and team communication.                   | High         | 1 hour               | None             | User            |\
+| T1.4          | Allocate Team Roles                 | Assign roles for Bubble.io development, RunwayML integration, Zapier workflows, and testing.      | High         | 2 hours              | T1.2             | User + Team     |\
+| T1.5          | Estimate Project Timeline           | Create a timeline for learning, development, testing, and deployment (suggested: 8 weeks total).  | Medium       | 2 hours              | T1.2             | User + Team     |\
+\
+---\
+\
+### Phase 2: Development Environment Setup\
+Set up accounts and tools using free tiers to prepare for development.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T2.1          | Sign Up for Bubble.io               | Create a free Bubble.io account for no-code web app development.                                  | High         | 30 minutes           | None             | User            |\
+| T2.2          | Sign Up for RunwayML                | Set up a free RunwayML account and obtain API keys or plugin access for video generation.         | High         | 1 hour               | None             | Team            |\
+| T2.3          | Sign Up for Zapier                  | Create a free Zapier account for social media automation (100 tasks/month limit).                 | High         | 30 minutes           | None             | User            |\
+| T2.4          | Sign Up for Cloudinary              | Set up a free Cloudinary account for media storage (25GB free).                                   | Medium       | 30 minutes           | None             | Team            |\
+| T2.5          | Set Up Google Sheets (Optional)     | Create a Google Sheet for analytics or data logging, if needed.                                   | Low          | 15 minutes           | None             | User            |\
+\
+---\
+\
+### Phase 3: User Authentication\
+Implement user access and a dashboard using Bubble.io\'92s no-code features.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T3.1          | Implement User Registration         | Use Bubble.io\'92s authentication to create a registration form with email and password.             | High         | 2 hours              | T2.1             | User            |\
+| T3.2          | Implement User Login                | Set up login workflows in Bubble.io using JWT tokens for session management.                      | High         | 2 hours              | T3.1             | User            |\
+| T3.3          | Design Dashboard Layout             | Create a responsive dashboard with sections for recent videos, scheduled posts, and analytics.    | High         | 4 hours              | T3.2             | User            |\
+| T3.4          | Add UI Best Practices to Dashboard  | Enhance the dashboard with labels, tooltips, and intuitive navigation for usability.              | Medium       | 2 hours              | T3.3             | User            |\
+\
+---\
+\
+### Phase 4: Video Creation\
+Develop the core AI-driven video generation functionality.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T4.1          | Create Video Prompt Input Form      | Build a Bubble.io form for users to input video prompts, language, and voice options.             | High         | 3 hours              | T3.4             | User            |\
+| T4.2          | Integrate RunwayML Plugin           | Connect RunwayML to Bubble.io via plugin or API for video generation.                             | High         | 4 hours              | T2.2, T4.1       | Team            |\
+| T4.3          | Set Up Video Generation Workflow    | Create Bubble.io workflows to trigger and manage video generation with RunwayML.                  | High         | 4 hours              | T4.2             | User + Team     |\
+| T4.4          | Implement Video Generation Status   | Design a screen showing real-time video generation progress in Bubble.io.                         | Medium       | 3 hours              | T4.3             | User            |\
+\
+---\
+\
+### Phase 5: Customization\
+Add features for users to personalize their videos.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T5.1          | Add Script Editing Feature          | Integrate a rich text editor (e.g., Quill.js via Bubble.io plugin) for script customization.      | High         | 4 hours              | T4.4             | User            |\
+| T5.2          | Integrate Music Library or Upload   | Allow music selection from a free library or uploads via Cloudinary.                              | Medium       | 5 hours              | T5.1             | Team            |\
+| T5.3          | Provide Voice Profile Selection     | Add a dropdown in Bubble.io for users to choose voice profiles.                                   | Medium       | 2 hours              | T5.2             | User            |\
+| T5.4          | Implement Subtitle Editing          | Enable subtitle addition and styling (font, color, timing) with live preview in Bubble.io.        | High         | 4 hours              | T5.3             | User            |\
+| T5.5          | Set Up Customization Save Workflow  | Create workflows to save customization changes and update videos.                                 | High         | 3 hours              | T5.4             | User + Team     |\
+\
+---\
+\
+### Phase 6: Scheduling & Publishing\
+Automate video scheduling and social media posting.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T6.1          | Set Up Zapier Workflows             | Create Zapier workflows for publishing to TikTok and YouTube Shorts.                              | High         | 5 hours              | T2.3             | Team            |\
+| T6.2          | Create Scheduling Forms             | Build Bubble.io forms for setting publish dates, platforms, and visibility.                      | High         | 3 hours              | T6.1             | User            |\
+| T6.3          | Automate Publishing                 | Set up automation in Bubble.io and Zapier to post videos at scheduled times.                      | High         | 4 hours              | T6.2             | Team            |\
+| T6.4          | Handle OAuth for Social Media APIs  | Use Zapier\'92s connectors for TikTok and YouTube authentication.                                    | Medium       | 2 hours              | T6.3             | Team            |\
+\
+---\
+\
+### Phase 7: Multi-Language Support\
+Enable video creation in multiple languages.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T7.1          | Add Language Selection              | Include a language dropdown in the video creation form (e.g., English, Spanish).                  | Medium       | 2 hours              | T4.1             | User            |\
+| T7.2          | Integrate Translation APIs          | Use Google Translate via Zapier for subtitle translation (free tier).                             | Medium       | 5 hours              | T7.1             | Team            |\
+| T7.3          | Ensure UI Multi-Language Support    | Use Bubble.io\'92s internationalization features for UI elements.                                    | Low          | 3 hours              | T7.2             | User            |\
+\
+---\
+\
+### Phase 8: Analytics Dashboard\
+Provide performance insights for users.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T8.1          | Set Up Zapier Analytics Fetch       | Create Zapier workflows to pull data from TikTok and YouTube APIs into Bubble.io or Google Sheets.| High         | 4 hours              | T6.4             | Team            |\
+| T8.2          | Build Analytics Dashboard           | Use Chart.js plugin in Bubble.io to display views, likes, and engagement metrics.                 | High         | 5 hours              | T8.1             | User            |\
+| T8.3          | Implement Analytics Filters         | Add date range and video-specific filters to the dashboard in Bubble.io.                          | Medium       | 3 hours              | T8.2             | User            |\
+\
+---\
+\
+### Phase 9: Security & Data Privacy\
+Ensure the platform is secure and compliant.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T9.1          | Ensure HTTPS Communications         | Verify Bubble.io enforces HTTPS for all communications (default setting).                         | High         | 1 hour               | T2.1             | User            |\
+| T9.2          | Implement Secure Authentication     | Use Bubble.io\'92s built-in security for password hashing and JWT tokens.                            | High         | 2 hours              | T3.1             | User            |\
+| T9.3          | Validate User Inputs                | Set up Bubble.io workflow rules to sanitize inputs and prevent injection attacks.                 | High         | 3 hours              | T9.2             | User + Team     |\
+| T9.4          | Document Data Privacy Compliance    | Ensure GDPR/CCPA compliance by collecting minimal data and adding consent workflows.              | Medium       | 2 hours              | T9.3             | User            |\
+\
+---\
+\
+### Phase 10: Performance Optimization\
+Optimize the platform for efficiency.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T10.1         | Optimize Workflows                  | Shift heavy operations to server-side processing in Bubble.io where possible.                     | Medium       | 4 hours              | T9.4             | Team            |\
+| T10.2         | Implement Caching                   | Use Bubble.io caching for user profiles and video metadata to reduce database load.               | Medium       | 3 hours              | T10.1            | Team            |\
+| T10.3         | Monitor API Usage                   | Track RunwayML and Zapier usage to stay within free tier limits using Bubble.io analytics.        | High         | 2 hours              | T10.2            | User + Team     |\
+\
+---\
+\
+### Phase 11: Testing & QA\
+Ensure the platform functions correctly.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T11.1         | Conduct Unit Testing                | Test individual features in Bubble.io\'92s preview mode.                                             | High         | 5 hours              | T10.3            | User + Team     |\
+| T11.2         | Perform Integration Testing         | Verify RunwayML and Zapier integrations work seamlessly with Bubble.io.                           | High         | 6 hours              | T11.1            | Team            |\
+| T11.3         | Carry Out User Acceptance Testing   | Test with sample users in Bubble.io\'92s staging environment to validate usability.                  | High         | 4 hours              | T11.2            | User + Team     |\
+| T11.4         | Test Edge Cases                     | Simulate invalid inputs and high traffic scenarios to identify weaknesses.                       | Medium       | 3 hours              | T11.3            | Team            |\
+\
+---\
+\
+### Phase 12: Deployment & Launch\
+Make the platform live and accessible.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T12.1         | Deploy Application                  | Move the app to Bubble.io production using the free hosting plan.                                 | High         | 2 hours              | T11.4            | User            |\
+| T12.2         | Set Up Domain Mapping (Optional)    | Use Bubble.io\'92s default URL for the free tier (custom domains require paid plans).                | Low          | 1 hour               | T12.1            | Team            |\
+| T12.3         | Notify Users of Launch              | Inform users via in-app notifications or email using Bubble.io workflows.                         | Medium       | 1 hour               | T12.2            | User            |\
+\
+---\
+\
+### Phase 13: Post-Launch Support\
+Maintain and improve the platform after launch.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T13.1         | Monitor for Bugs                    | Use Bubble.io logs and analytics to track performance and address issues.                         | High         | Ongoing              | T12.3            | User + Team     |\
+| T13.2         | Provide Support Channels            | Set up an email or in-app support form in Bubble.io for user inquiries.                           | Medium       | Ongoing              | T13.1            | User            |\
+| T13.3         | Update Application                  | Implement bug fixes and minor updates as needed, using Bubble.io version history for rollbacks.   | Medium       | As needed            | T13.2            | Team            |\
+\
+---\
+\
+### Phase 14: Cost Management\
+Monitor usage to stay within free tier limits.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T14.1         | Monitor Bubble.io Usage             | Ensure usage stays within Bubble.io free plan limits (hosting/storage).                           | High         | Ongoing              | T13.3            | User            |\
+| T14.2         | Track RunwayML API Usage            | Monitor video generation to stay within RunwayML free tier limits.                                | High         | Ongoing              | T14.1            | Team            |\
+| T14.3         | Monitor Zapier Task Usage           | Stay within Zapier\'92s 100 tasks/month limit, adjusting workflows if necessary.                     | High         | Ongoing              | T14.2            | User            |\
+\
+---\
+\
+### Phase 15: Documentation\
+Create and maintain project documentation.\
+\
+| **Ticket ID** | **Title**                           | **Description**                                                                                   | **Priority** | **Estimated Effort** | **Dependencies** | **Assigned To** |\
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|--------------|----------------------|------------------|-----------------|\
+| T15.1         | Document Workflows                  | Add notes and comments to Bubble.io workflows for clarity.                                        | Medium       | 3 hours              | T14.3            | User            |\
+| T15.2         | Create Technical Documentation      | Document RunwayML and Zapier setups in Notion or Google Docs (free tools).                        | Medium       | 4 hours              | T15.1            | Team            |\
+| T15.3         | Maintain Changelog                  | Track changes in Trello or Asana for updates and fixes.                                           | Low          | Ongoing              | T15.2            | User            |\
+| T15.4         | Provide User Guides                 | Add guides and tutorials to the app\'92s Help and Support screen in Bubble.io.                       | Medium       | 5 hours              | T15.3            | User            |\
+\
+---\
+\
+## Summary\
+This ticket list outlines a comprehensive plan to build an AI-Powered Faceless Video Generation Platform with no budget, using free-tier tools like Bubble.io, RunwayML, and Zapier. The phases cover setup, development, testing, deployment, and support, with tickets assigned to either the user or team based on responsibilities. Track progress in a project management tool, monitor free tier limits, and maintain clear documentation to ensure a successful launch and ongoing maintenance.}
