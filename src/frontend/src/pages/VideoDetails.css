@@ -1,0 +1,158 @@
+.video-details {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.details-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.video-preview {
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 9 / 16;
+  max-height: 600px;
+}
+
+.video-preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.video-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #fff;
+  background: #333;
+}
+
+.details-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-pending {
+  background: #fff3e0;
+  color: #ff9800;
+}
+
+.status-processing {
+  background: #e3f2fd;
+  color: #2196f3;
+}
+
+.status-completed, .status-published {
+  background: #e8f5e9;
+  color: #4caf50;
+}
+
+.status-failed {
+  background: #ffebee;
+  color: #f44336;
+}
+
+.prompt-text {
+  margin-top: 15px;
+  line-height: 1.6;
+}
+
+.platforms-status {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.platform-status {
+  padding: 15px;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+.platform-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.platform-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.platform-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #3f51b5;
+  text-decoration: none;
+}
+
+.platform-link:hover {
+  text-decoration: underline;
+}
+
+.platform-date {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+.btn-danger {
+  background: #f44336;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #d32f2f;
+}
+
+@media (max-width: 992px) {
+  .details-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .video-preview {
+    max-height: 500px;
+  }
+}
