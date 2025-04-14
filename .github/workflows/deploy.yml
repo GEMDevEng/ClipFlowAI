@@ -22,6 +22,28 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'src/frontend/package-lock.json'
 
+      - name: Create basic React app structure if it doesn't exist
+        run: |
+          mkdir -p src/frontend/src
+          mkdir -p src/frontend/public
+
+          # Create index.css if it doesn't exist
+          if [ ! -f "src/frontend/src/index.css" ]; then
+            echo "body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; } code { font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace; }" > src/frontend/src/index.css
+          fi
+
+          # Create index.html if it doesn't exist
+          if [ ! -f "src/frontend/public/index.html" ]; then
+            echo "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8' /><meta name='viewport' content='width=device-width, initial-scale=1' /><meta name='theme-color' content='#000000' /><meta name='description' content='ClipFlowAI - Create and share videos with AI' /><title>ClipFlowAI</title></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id='root'></div></body></html>" > src/frontend/public/index.html
+          fi
+
+          # Create 404.html for GitHub Pages SPA routing
+          echo "<!DOCTYPE html><html><head><meta charset='utf-8'><title>ClipFlowAI</title><script type='text/javascript'>var pathSegmentsToKeep=1;var l=window.location;l.replace(l.protocol+'//'+ l.hostname+(l.port?':'+l.port:'')+l.pathname.split('/').slice(0,1+pathSegmentsToKeep).join('/')+'/?/'+l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g,'~and~')+(l.search?'&'+l.search.slice(1).replace(/&/g,'~and~'):'')+l.hash);</script></head><body></body></html>" > src/frontend/public/404.html
+
+      - name: Update index.js for HashRouter
+        run: |
+          echo "import React from 'react'; import ReactDOM from 'react-dom/client'; import './index.css'; import App from './App'; import { HashRouter } from 'react-router-dom'; const root = ReactDOM.createRoot(document.getElementById('root')); root.render( <React.StrictMode> <HashRouter> <App /> </HashRouter> </React.StrictMode> );" > src/frontend/src/index.js
+
       - name: Install dependencies
         run: cd src/frontend && npm install
 
@@ -29,8 +51,8 @@ jobs:
         run: cd src/frontend && npm run build
         env:
           CI: false
-          REACT_APP_SUPABASE_URL: ${{ secrets.REACT_APP_SUPABASE_URL }}
-          REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.REACT_APP_SUPABASE_ANON_KEY }}
+          REACT_APP_SUPABASE_URL: https://wkevcxbbnbtlndkkhtgr.supabase.co
+          REACT_APP_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndrZXZjeGJibmJ0bG5ka2todGdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk5NzQ0NTYsImV4cCI6MjAxNTU1MDQ1Nn0.Xt8Z8gnuGQlUUGKfVZ0QYbTZgk_ygJJRuYBrb5xUgKY
           REACT_APP_SITE_URL: https://gemdeveng.github.io/ClipFlowAI
 
       - name: Copy 404.html to build directory
