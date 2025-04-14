@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { uploadAvatar } from '../services/storageService';
+import { getAuthHistory } from '../services/securityService';
 import './Profile.css';
 
 const Profile = () => {
@@ -14,6 +15,8 @@ const Profile = () => {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [authHistory, setAuthHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
@@ -24,8 +27,26 @@ const Profile = () => {
       setDisplayName(currentUser.user_metadata?.displayName || '');
       setEmail(currentUser.email || '');
       setAvatarUrl(currentUser.user_metadata?.avatarUrl || '');
+
+      // Load auth history
+      loadAuthHistory();
     }
   }, [currentUser]);
+
+  // Load authentication history
+  const loadAuthHistory = async () => {
+    if (!currentUser?.id) return;
+
+    try {
+      setLoadingHistory(true);
+      const history = await getAuthHistory(currentUser.id);
+      setAuthHistory(history);
+    } catch (error) {
+      console.error('Error loading auth history:', error);
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
 
   // Handle avatar file selection
   const handleAvatarChange = (e) => {
@@ -169,6 +190,44 @@ const Profile = () => {
             {loading || uploadLoading ? 'Updating...' : 'Update Profile'}
           </button>
         </form>
+
+        <div className="security-section">
+          <h2>Security Activity</h2>
+          {loadingHistory ? (
+            <p>Loading security activity...</p>
+          ) : authHistory.length > 0 ? (
+            <div className="auth-history">
+              <table className="auth-history-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Activity</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {authHistory.map((item) => (
+                    <tr key={item.id}>
+                      <td>{new Date(item.created_at).toLocaleString()}</td>
+                      <td>
+                        {item.attempt_type === 'login' && 'Login'}
+                        {item.attempt_type === 'signup' && 'Sign Up'}
+                        {item.attempt_type === 'google_login' && 'Google Login'}
+                        {item.attempt_type === 'google_signup' && 'Google Sign Up'}
+                        {item.attempt_type === 'reset_password' && 'Password Reset'}
+                      </td>
+                      <td className={item.success ? 'success-status' : 'failed-status'}>
+                        {item.success ? 'Success' : 'Failed'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p>No security activity found.</p>
+          )}
+        </div>
 
         <div className="profile-actions">
           <button

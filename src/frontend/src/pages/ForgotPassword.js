@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { checkRateLimit } from '../services/securityService';
 import './Login.css'; // Reuse the same styles
 
 const ForgotPassword = () => {
@@ -8,29 +9,36 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
-  
+
   const { resetPassword } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!email) {
       setError('Please enter your email address');
       return;
     }
-    
+
     try {
       setError('');
       setMessage('');
       setLoading(true);
-      
+
+      // Check rate limiting before attempting password reset
+      const isAllowed = await checkRateLimit(email, 'reset_password');
+      if (!isAllowed) {
+        setError('Too many password reset attempts. Please try again later.');
+        return;
+      }
+
       await resetPassword(email);
-      
+
       // Show success message
       setMessage('Password reset link has been sent to your email. Please check your inbox.');
     } catch (error) {
       console.error('Password reset error:', error);
-      
+
       // Provide more specific error messages
       if (error.message.includes('user not found')) {
         setError('No account found with this email address.');
@@ -48,10 +56,10 @@ const ForgotPassword = () => {
     <div className="auth-container">
       <div className="auth-card">
         <h1>Reset Password</h1>
-        
+
         {error && <div className="error-message">{error}</div>}
         {message && <div className="success-message">{message}</div>}
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
@@ -64,16 +72,16 @@ const ForgotPassword = () => {
               required
             />
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             className="btn btn-primary btn-block"
             disabled={loading}
           >
             {loading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
-        
+
         <div className="auth-links">
           <Link to="/login">Back to Login</Link>
           <Link to="/">Back to Home</Link>

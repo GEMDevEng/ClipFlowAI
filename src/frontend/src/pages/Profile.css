@@ -87,7 +87,50 @@
   margin-bottom: 30px;
 }
 
+.security-section {
+  margin-top: 30px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.security-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.auth-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.auth-history-table th,
+.auth-history-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.auth-history-table th {
+  font-weight: 600;
+  color: #555;
+  background-color: #f9f9f9;
+}
+
+.success-status {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.failed-status {
+  color: #f44336;
+  font-weight: 500;
+}
+
 .profile-actions {
+  margin-top: 30px;
   display: flex;
   justify-content: center;
 }

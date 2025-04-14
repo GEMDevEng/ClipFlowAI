@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { checkRateLimit, recordSuccessfulAuth } from '../services/securityService';
 import './Login.css'; // Reuse the same styles
 
 const Signup = () => {
@@ -36,7 +37,20 @@ const Signup = () => {
       setError('');
       setLoading(true);
 
-      await signup(email, password, name);
+      // Check rate limiting before attempting signup
+      const isAllowed = await checkRateLimit(email, 'signup');
+      if (!isAllowed) {
+        setError('Too many signup attempts. Please try again later.');
+        return;
+      }
+
+      // Attempt signup
+      const user = await signup(email, password, name);
+
+      // Record successful signup
+      if (user?.id) {
+        await recordSuccessfulAuth(email, 'signup', user.id);
+      }
 
       // Redirect to dashboard after successful signup
       navigate('/dashboard');
@@ -65,7 +79,20 @@ const Signup = () => {
       setError('');
       setLoading(true);
 
-      await loginWithGoogle();
+      // Check rate limiting before attempting Google signup
+      const isAllowed = await checkRateLimit(null, 'google_signup');
+      if (!isAllowed) {
+        setError('Too many signup attempts. Please try again later.');
+        return;
+      }
+
+      // Attempt Google signup
+      const user = await loginWithGoogle();
+
+      // Record successful signup if we have user data
+      if (user?.id) {
+        await recordSuccessfulAuth(user.email, 'google_signup', user.id);
+      }
 
       // Redirect to dashboard after successful signup
       navigate('/dashboard');

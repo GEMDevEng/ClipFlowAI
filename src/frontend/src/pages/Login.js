@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { checkRateLimit, recordSuccessfulAuth } from '../services/securityService';
 import './Login.css';
 
 const Login = () => {
@@ -28,7 +29,18 @@ const Login = () => {
       setError('');
       setLoading(true);
 
-      await login(email, password);
+      // Check rate limiting before attempting login
+      const isAllowed = await checkRateLimit(email, 'login');
+      if (!isAllowed) {
+        setError('Too many login attempts. Please try again later.');
+        return;
+      }
+
+      // Attempt login
+      const user = await login(email, password);
+
+      // Record successful login
+      await recordSuccessfulAuth(email, 'login', user.id);
 
       // Redirect to the page they were trying to access or dashboard
       navigate(from, { replace: true });
@@ -55,7 +67,20 @@ const Login = () => {
       setError('');
       setLoading(true);
 
-      await loginWithGoogle();
+      // Check rate limiting before attempting Google login
+      const isAllowed = await checkRateLimit(null, 'google_login');
+      if (!isAllowed) {
+        setError('Too many login attempts. Please try again later.');
+        return;
+      }
+
+      // Attempt Google login
+      const user = await loginWithGoogle();
+
+      // Record successful login if we have user data
+      if (user?.id) {
+        await recordSuccessfulAuth(user.email, 'google_login', user.id);
+      }
 
       // Redirect to the page they were trying to access or dashboard
       navigate(from, { replace: true });
