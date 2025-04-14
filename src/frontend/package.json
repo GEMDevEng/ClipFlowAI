@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ffmpeg/core": "^0.12.10",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@supabase/supabase-js": "^2.38.4",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -15,6 +18,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
+    "recharts": "^2.15.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -41,5 +45,8 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://gemdeveng.github.io/ClipFlowAI"
+  "homepage": "https://gemdeveng.github.io/ClipFlowAI",
+  "devDependencies": {
+    "identity-obj-proxy": "^3.0.0"
+  }
 }

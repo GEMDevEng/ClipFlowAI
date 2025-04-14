@@ -1,16 +1,17 @@
-import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile } from '@ffmpeg/util';
 
 // Create FFmpeg instance
-const ffmpeg = createFFmpeg({
-  log: true,
-  corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js',
-});
+const ffmpeg = new FFmpeg();
+const config = {
+  log: true
+};
 
 // Load FFmpeg
 let ffmpegLoaded = false;
 const loadFFmpeg = async () => {
   if (!ffmpegLoaded) {
-    await ffmpeg.load();
+    await ffmpeg.load(config);
     ffmpegLoaded = true;
     console.log('FFmpeg loaded');
   }

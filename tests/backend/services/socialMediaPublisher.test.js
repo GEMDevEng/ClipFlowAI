@@ -169,7 +169,8 @@ describe('socialMediaPublisher', () => {
 
       // Mock publishToAllPlatforms
       const mockPublishResult = [{ platform: 'tiktok', status: 'published' }];
-      jest.spyOn(module.exports, 'publishToAllPlatforms').mockResolvedValue(mockPublishResult);
+      const originalPublishToAllPlatforms = publishToAllPlatforms;
+      global.publishToAllPlatforms = jest.fn().mockResolvedValue(mockPublishResult);
 
       // Call the function
       const videoData = {
@@ -182,7 +183,10 @@ describe('socialMediaPublisher', () => {
 
       // Check the result
       expect(result).toEqual(mockPublishResult);
-      expect(module.exports.publishToAllPlatforms).toHaveBeenCalledWith(videoData, videoData.platforms);
+      expect(global.publishToAllPlatforms).toHaveBeenCalledWith(videoData, videoData.platforms);
+
+      // Restore the original function
+      global.publishToAllPlatforms = originalPublishToAllPlatforms;
     });
 
     it('should handle errors during publishing', async () => {
@@ -191,7 +195,8 @@ describe('socialMediaPublisher', () => {
       pastDate.setDate(pastDate.getDate() - 1); // Yesterday
 
       // Mock publishToAllPlatforms to throw an error
-      jest.spyOn(module.exports, 'publishToAllPlatforms').mockRejectedValue(new Error('Publishing error'));
+      const originalPublishToAllPlatforms = publishToAllPlatforms;
+      global.publishToAllPlatforms = jest.fn().mockRejectedValue(new Error('Publishing error'));
 
       // Call the function
       const videoData = {
@@ -205,6 +210,9 @@ describe('socialMediaPublisher', () => {
       // Check the result
       expect(result).toHaveProperty('status', 'failed');
       expect(result).toHaveProperty('error', 'Publishing error');
+
+      // Restore the original function
+      global.publishToAllPlatforms = originalPublishToAllPlatforms;
     });
   });
 
@@ -215,7 +223,8 @@ describe('socialMediaPublisher', () => {
         { platform: 'tiktok', status: 'published' },
         { platform: 'instagram', status: 'published' }
       ];
-      jest.spyOn(module.exports, 'checkAndPublishScheduled')
+      const originalCheckAndPublishScheduled = checkAndPublishScheduled;
+      global.checkAndPublishScheduled = jest.fn()
         .mockResolvedValueOnce(mockResults)
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(mockResults);
@@ -234,6 +243,9 @@ describe('socialMediaPublisher', () => {
       expect(results[0]).toHaveProperty('results', mockResults);
       expect(results[1]).toHaveProperty('videoId', '3');
       expect(results[1]).toHaveProperty('results', mockResults);
+
+      // Restore the original function
+      global.checkAndPublishScheduled = originalCheckAndPublishScheduled;
     });
 
     it('should handle empty video array', async () => {
