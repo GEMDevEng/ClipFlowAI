@@ -3,14 +3,15 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 // Removed: const connectDB = require('./config/db');
 const telegramBot = require('./services/telegramBot');
+const analyticsCollector = require('./services/analyticsCollector');
 
 /**
  * NOTE: This backend server is simplified as the application primarily uses Supabase
  * for authentication, database, and storage operations directly from the frontend.
  *
  * The main purpose of this server is to handle auxiliary services like the Telegram bot
- * that cannot be managed directly from the frontend. The MongoDB connection and related
- * API routes have been removed to avoid architectural conflicts.
+ * and analytics collection that cannot be managed directly from the frontend.
+ * The MongoDB connection and related API routes have been removed to avoid architectural conflicts.
  */
 
 // Load environment variables
@@ -62,6 +63,18 @@ const server = app.listen(PORT, async () => {
     }
   } else {
     console.log('No Telegram bot token provided, skipping bot initialization');
+  }
+
+  // Start analytics collector if Supabase credentials are provided
+  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+    try {
+      // Start collecting analytics every 60 minutes
+      analyticsCollector.startCollector(60);
+    } catch (error) {
+      console.error('Analytics collector initialization failed:', error.message);
+    }
+  } else {
+    console.log('No Supabase credentials provided, skipping analytics collector');
   }
 });
 

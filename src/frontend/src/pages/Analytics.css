@@ -46,26 +46,25 @@
   margin-bottom: 2rem;
 }
 
-.chart-placeholder {
+.chart-card {
   background-color: var(--card-bg);
   padding: 1.5rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-sm);
-  min-height: 200px; /* Placeholder height */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  min-height: 350px; /* Chart height */
 }
 
-.chart-placeholder h2 {
+.chart-container {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-container h2 {
   margin-top: 0;
   margin-bottom: 1rem;
-}
-
-.chart-placeholder p {
-  color: var(--text-secondary);
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--text-primary);
 }
 
 .analytics-insights {
