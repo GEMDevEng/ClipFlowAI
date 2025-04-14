@@ -9,15 +9,15 @@ export const fetchVideoAnalytics = async (videoId) => {
   try {
     // In a real implementation, this would call APIs for each platform
     // For now, we'll simulate fetching data
-    
+
     // 1. Get the video's platform publications
     const { data: platforms, error: platformsError } = await supabase
       .from('platforms')
       .select('name, published_url')
       .eq('video_id', videoId);
-    
+
     if (platformsError) throw platformsError;
-    
+
     // 2. For each platform, fetch analytics (simulated)
     const analyticsData = await Promise.all(
       platforms.map(async (platform) => {
@@ -26,7 +26,7 @@ export const fetchVideoAnalytics = async (videoId) => {
         return simulatePlatformAnalytics(platform.name, videoId);
       })
     );
-    
+
     // 3. Combine the data
     const combinedData = {
       views: 0,
@@ -35,27 +35,27 @@ export const fetchVideoAnalytics = async (videoId) => {
       comments: 0,
       platforms: {}
     };
-    
+
     analyticsData.forEach((data, index) => {
       const platformName = platforms[index].name;
-      
+
       // Add to totals
       combinedData.views += data.views;
       combinedData.likes += data.likes;
       combinedData.shares += data.shares;
       combinedData.comments += data.comments;
-      
+
       // Store platform-specific data
       combinedData.platforms[platformName] = data;
     });
-    
+
     // 4. Update the video record with the totals
     await updateVideoAnalytics(videoId, {
       views: combinedData.views,
       likes: combinedData.likes,
       shares: combinedData.shares
     });
-    
+
     return combinedData;
   } catch (error) {
     console.error('Error fetching video analytics:', error);
@@ -80,11 +80,76 @@ export const updateVideoAnalytics = async (videoId, analyticsData) => {
         updated_at: new Date().toISOString()
       })
       .eq('id', videoId);
-    
+
     if (error) throw error;
   } catch (error) {
     console.error('Error updating video analytics:', error);
     throw error;
+  }
+};
+
+/**
+ * Get analytics data for a specific video
+ * @param {string} videoId - Video ID
+ * @returns {Promise<object>} - Analytics data
+ */
+export const getVideoAnalytics = async (videoId) => {
+  try {
+    // 1. Get the video's platform publications
+    const { data: platforms, error: platformsError } = await supabase
+      .from('platforms')
+      .select('name, published_url')
+      .eq('video_id', videoId);
+
+    if (platformsError) throw platformsError;
+
+    // 2. Get the latest analytics data for each platform
+    const { data: analyticsData, error: analyticsError } = await supabase
+      .from('analytics')
+      .select('platform, views, likes, shares, comments')
+      .eq('video_id', videoId)
+      .order('date', { ascending: false })
+      .limit(platforms.length);
+
+    if (analyticsError) throw analyticsError;
+
+    // 3. Combine the data
+    const combinedData = {
+      views: 0,
+      likes: 0,
+      shares: 0,
+      comments: 0,
+      platforms: {}
+    };
+
+    analyticsData.forEach((data) => {
+      // Add to totals
+      combinedData.views += data.views;
+      combinedData.likes += data.likes;
+      combinedData.shares += data.shares;
+      combinedData.comments += data.comments;
+
+      // Store platform-specific data
+      combinedData.platforms[data.platform] = {
+        views: data.views,
+        likes: data.likes,
+        shares: data.shares,
+        comments: data.comments,
+        platform: data.platform
+      };
+    });
+
+    return combinedData;
+  } catch (error) {
+    console.error('Error fetching video analytics:', error);
+    // Return default data if there's an error
+    return {
+      views: 0,
+      likes: 0,
+      shares: 0,
+      comments: 0,
+      platforms: {}
+    };
   }
 };
 
@@ -102,13 +167,13 @@ export const storeAnalyticsRecord = async (videoId, userId, platform, analyticsD
     const { count, error: checkError } = await supabase
       .from('analytics')
       .select('*', { count: 'exact', head: true });
-    
+
     // If the table doesn't exist or there's an error, return without storing
     if (checkError) {
       console.warn('Analytics table not available:', checkError.message);
       return null;
     }
-    
+
     // Store the analytics record
     const { data, error } = await supabase
       .from('analytics')
@@ -124,9 +189,9 @@ export const storeAnalyticsRecord = async (videoId, userId, platform, analyticsD
       }])
       .select()
       .single();
-    
+
     if (error) throw error;
-    
+
     return data;
   } catch (error) {
     console.error('Error storing analytics record:', error);
@@ -142,43 +207,42 @@ export const storeAnalyticsRecord = async (videoId, userId, platform, analyticsD
  */
 export const getAnalyticsByPlatform = async (userId) => {
   try {
-    // Get all videos for the user
-    const { data: videos, error: videosError } = await supabase
-      .from('videos')
-      .select(`
-        id,
-        platforms (
-          name,
-          status
-        )
-      `)
-      .eq('user_id', userId);
-    
-    if (videosError) throw videosError;
-    
-    // Get all platforms used by the user
-    const platforms = new Set();
-    videos.forEach(video => {
-      video.platforms.forEach(platform => {
-        if (platform.status === 'published') {
-          platforms.add(platform.name);
-        }
-      });
+    // Get analytics data grouped by platform
+    const { data, error } = await supabase
+      .from('analytics')
+      .select('platform, views, likes, shares, comments')
+      .eq('user_id', userId)
+      .order('date', { ascending: false });
+
+    if (error) throw error;
+
+    // Group by platform and sum the metrics
+    const platformMap = {};
+
+    data.forEach(item => {
+      if (!platformMap[item.platform]) {
+        platformMap[item.platform] = {
+          platform: item.platform,
+          views: 0,
+          likes: 0,
+          shares: 0,
+          comments: 0
+        };
+      }
+
+      // Only add the latest data for each platform
+      if (!platformMap[item.platform].counted) {
+        platformMap[item.platform].views += item.views;
+        platformMap[item.platform].likes += item.likes;
+        platformMap[item.platform].shares += item.shares;
+        platformMap[item.platform].comments += item.comments;
+        platformMap[item.platform].counted = true;
+      }
     });
-    
-    // For each platform, get analytics data (simulated)
-    const result = [];
-    for (const platform of platforms) {
-      // In a real implementation, this would aggregate data from the analytics table
-      // For now, return simulated data
-      result.push({
-        platform,
-        views: Math.floor(Math.random() * 2000) + 500,
-        likes: Math.floor(Math.random() * 500) + 100,
-        shares: Math.floor(Math.random() * 200) + 50
-      });
-    }
-    
+
+    // Convert the map to an array
+    const result = Object.values(platformMap);
+
     return result;
   } catch (error) {
     console.error('Error getting analytics by platform:', error);
@@ -194,28 +258,58 @@ export const getAnalyticsByPlatform = async (userId) => {
  */
 export const getAnalyticsOverTime = async (userId, days = 7) => {
   try {
-    // In a real implementation, this would query the analytics table
-    // For now, return simulated data
-    
+    // Get analytics data for the specified time period
+    const { data, error } = await supabase
+      .from('analytics')
+      .select('date, views, likes, shares')
+      .eq('user_id', userId)
+      .gte('date', new Date(new Date().setDate(new Date().getDate() - days)).toISOString())
+      .order('date', { ascending: true });
+
+    if (error) throw error;
+
+    // Group by date and sum the metrics
+    const dateMap = {};
+
+    data.forEach(item => {
+      const dateStr = item.date.split('T')[0];
+
+      if (!dateMap[dateStr]) {
+        dateMap[dateStr] = {
+          date: dateStr,
+          views: 0,
+          likes: 0,
+          shares: 0
+        };
+      }
+
+      dateMap[dateStr].views += item.views;
+      dateMap[dateStr].likes += item.likes;
+      dateMap[dateStr].shares += item.shares;
+    });
+
+    // Convert the map to an array and ensure all dates are included
     const result = [];
     const today = new Date();
-    
+
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      
-      // Generate some random data with an upward trend
-      const baseViews = 50 + (days - i) * 10;
-      const randomFactor = Math.random() * 0.5 + 0.75; // 0.75 to 1.25
-      
-      result.push({
-        date: date.toISOString().split('T')[0],
-        views: Math.floor(baseViews * randomFactor),
-        likes: Math.floor(baseViews * 0.3 * randomFactor),
-        shares: Math.floor(baseViews * 0.1 * randomFactor)
-      });
+      const dateStr = date.toISOString().split('T')[0];
+
+      if (dateMap[dateStr]) {
+        result.push(dateMap[dateStr]);
+      } else {
+        // Add a zero entry for dates with no data
+        result.push({
+          date: dateStr,
+          views: 0,
+          likes: 0,
+          shares: 0
+        });
+      }
     }
-    
+
     return result;
   } catch (error) {
     console.error('Error getting analytics over time:', error);
@@ -235,7 +329,7 @@ const simulatePlatformAnalytics = async (platform, videoId) => {
   let likesRatio = 0.3;
   let sharesRatio = 0.1;
   let commentsRatio = 0.05;
-  
+
   switch (platform.toLowerCase()) {
     case 'tiktok':
       viewsMultiplier = 2.5;
@@ -262,20 +356,20 @@ const simulatePlatformAnalytics = async (platform, videoId) => {
       commentsRatio = 0.06;
       break;
   }
-  
+
   // Base views (using the videoId to ensure consistency)
   const videoIdSum = videoId.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
   const baseViews = (videoIdSum % 500) + 100;
-  
+
   // Calculate metrics
   const views = Math.floor(baseViews * viewsMultiplier);
   const likes = Math.floor(views * likesRatio);
   const shares = Math.floor(views * sharesRatio);
   const comments = Math.floor(views * commentsRatio);
-  
+
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 100));
-  
+
   return {
     views,
     likes,

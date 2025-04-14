@@ -85,9 +85,25 @@ const Analytics = () => {
       <div className="analytics-insights card">
         <h2>Insights & Recommendations</h2>
         <ul>
-          <li>Videos published on Tuesdays tend to get more views.</li>
-          <li>Consider using shorter titles for better engagement on TikTok.</li>
-          <li>Experiment with different background music styles.</li>
+          {platformData && platformData.length > 0 ? (
+            <>
+              <li>
+                {platformData.sort((a, b) => b.views - a.views)[0].platform} is your best performing platform with
+                {platformData.sort((a, b) => b.views - a.views)[0].views.toLocaleString()} views.
+              </li>
+              <li>
+                Your engagement rate is {Math.round((analytics.totalLikes / analytics.totalViews) * 100)}%
+                {(analytics.totalLikes / analytics.totalViews) > 0.1 ? '(excellent)' : (analytics.totalLikes / analytics.totalViews) > 0.05 ? '(good)' : '(needs improvement)'}.
+              </li>
+              <li>
+                {timeData && timeData.length > 0 && timeData[timeData.length - 1].views > timeData[0].views ?
+                  'Your views are trending upward. Keep up the good work!' :
+                  'Try posting more consistently to increase your views.'}
+              </li>
+            </>
+          ) : (
+            <li>Publish more videos to get personalized insights.</li>
+          )}
         </ul>
       </div>
     </div>
