@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: 'src/frontend/package-lock.json'
 
       - name: Install dependencies
-        run: cd src/frontend && npm ci
+        run: cd src/frontend && npm install
 
       - name: Build
         run: cd src/frontend && npm run build
