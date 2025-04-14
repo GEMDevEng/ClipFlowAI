@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
       const { user } = await authService.signUp(email, password, { displayName });
       return user;
     } catch (error) {
+      console.error('Auth context signup error:', error);
       setError(error.message);
       throw error;
     }
@@ -30,6 +31,7 @@ export const AuthProvider = ({ children }) => {
       const { user } = await authService.signIn(email, password);
       return user;
     } catch (error) {
+      console.error('Auth context login error:', error);
       setError(error.message);
       throw error;
     }

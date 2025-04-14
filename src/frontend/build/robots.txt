@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://gemdeveng.github.io/ClipFlowAI/sitemap.xml
