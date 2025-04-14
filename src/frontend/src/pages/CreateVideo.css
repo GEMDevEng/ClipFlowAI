@@ -139,6 +139,51 @@
   margin-bottom: 20px;
 }
 
+/* Publishing options styles */
+.publishing-options {
+  margin-bottom: 15px;
+}
+
+.schedule-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.schedule-option input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.schedule-datetime {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #f5f7ff;
+  border-radius: 4px;
+}
+
+.schedule-date,
+.schedule-time {
+  flex: 1;
+}
+
+.schedule-date label,
+.schedule-time label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.schedule-date input,
+.schedule-time input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
 /* Platform selection styles */
 .platforms-selection {
   display: flex;

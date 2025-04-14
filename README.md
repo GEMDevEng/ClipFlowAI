@@ -21,6 +21,14 @@ ClipFlowAI is a full-code solution for automating the creation and publication o
 - **Profile Management**: Upload profile pictures and manage account settings
 - **Password Recovery**: Secure password reset functionality
 
+### New Features
+
+- **Video Customization**: Edit scripts, select music, choose voice profiles, and customize subtitles
+- **Multi-Language Support**: Create videos in multiple languages including English, Spanish, French, German, Italian, Japanese, Korean, Chinese, Portuguese, and Russian
+- **Scheduled Publishing**: Schedule videos to be published at specific times
+- **Multi-Platform Publishing**: Support for TikTok, Instagram, and YouTube
+- **Comprehensive Testing**: Unit tests for frontend and backend components
+
 ## $0 Budget Approach
 
 This project is designed to be completely free to set up and run:
@@ -43,7 +51,17 @@ This project is designed to be completely free to set up and run:
 │   │       ├── supabase/     # Supabase configuration
 │   │       ├── pages/        # Page components
 │   │       └── services/     # Service modules
+│   └── backend/              # Node.js backend application
+│       ├── controllers/      # API controllers
+│       ├── routes/           # API routes
+│       ├── services/         # Business logic services
+│       └── server.js         # Express server setup
 ├── tests/                    # Test files
+│   ├── frontend/             # Frontend tests
+│   │   ├── pages/            # Page component tests
+│   │   └── services/         # Service module tests
+│   └── backend/              # Backend tests
+│       └── services/         # Service module tests
 ├── .github/                  # GitHub configuration
 └── README.md                 # This file
 ```
@@ -86,9 +104,23 @@ This project is designed to be completely free to set up and run:
    REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
 
-5. Start the development server:
+5. Create a `.env` file in the `src/backend` directory with your configuration:
+
+   ```env
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_SERVICE_KEY=your_supabase_service_key
+   TELEGRAM_BOT_TOKEN=your_telegram_bot_token (optional)
+   ```
+
+6. Start the development servers:
 
    ```bash
+   # Start the frontend
+   cd src/frontend
+   npm start
+
+   # In a separate terminal, start the backend
+   cd src/backend
    npm start
    ```
 
@@ -103,6 +135,20 @@ This project is designed to be completely free to set up and run:
    ```
 
 3. Or push to the main branch to trigger automatic deployment via GitHub Actions.
+
+## Testing
+
+The project includes comprehensive tests for both frontend and backend components:
+
+```bash
+# Run frontend tests
+cd src/frontend
+npm test
+
+# Run backend tests
+cd src/backend
+npm test
+```
 
 ## License
 

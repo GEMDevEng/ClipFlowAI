@@ -54,7 +54,7 @@ export const getVideoById = async (id) => {
  * @returns {Promise<object>} - Created video object
  */
 export const createVideo = async (videoData) => {
-  const { platforms, ...videoDetails } = videoData;
+  const { platforms, script, music, voiceProfile, language, subtitles, ...videoDetails } = videoData;
 
   // Insert video record
   const { data: video, error: videoError } = await supabase
@@ -62,6 +62,11 @@ export const createVideo = async (videoData) => {
     .insert([
       {
         ...videoDetails,
+        script,
+        music,
+        voice_profile: voiceProfile,
+        language,
+        subtitles,
         created_at: new Date().toISOString(),
         status: 'pending'
       }
@@ -101,13 +106,18 @@ export const createVideo = async (videoData) => {
  * @returns {Promise<object>} - Updated video object
  */
 export const updateVideo = async (id, videoData) => {
-  const { platforms, ...videoDetails } = videoData;
+  const { platforms, script, music, voiceProfile, language, subtitles, ...videoDetails } = videoData;
 
   // Update video record
   const { error: videoError } = await supabase
     .from(VIDEOS_TABLE)
     .update({
       ...videoDetails,
+      script,
+      music,
+      voice_profile: voiceProfile,
+      language,
+      subtitles,
       updated_at: new Date().toISOString()
     })
     .eq('id', id);

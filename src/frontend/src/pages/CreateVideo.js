@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useVideos } from '../context/VideoContext';
 import { useAuth } from '../context/AuthContext';
@@ -20,6 +20,16 @@ const CreateVideo = () => {
     youtube: true
   });
 
+  const [schedulePublish, setSchedulePublish] = useState(false);
+  const [publishDate, setPublishDate] = useState('');
+  const [publishTime, setPublishTime] = useState('');
+
+  const [language, setLanguage] = useState('en-US');
+
+  const [script, setScript] = useState('');
+  const [music, setMusic] = useState('default');
+  const [voiceProfile, setVoiceProfile] = useState('default');
+  const [subtitles, setSubtitles] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(0);
@@ -58,11 +68,24 @@ const CreateVideo = () => {
 
       const selectedPlatforms = Object.keys(platforms).filter(key => platforms[key]);
 
+      // Calculate scheduled publish time if enabled
+      let scheduledPublishTime = null;
+      if (schedulePublish && publishDate && publishTime) {
+        scheduledPublishTime = new Date(`${publishDate}T${publishTime}`).toISOString();
+      }
+
       const videoData = {
         title,
         prompt,
+        script: script || prompt, // Use prompt as default script if not provided
+        music,
+        voiceProfile,
+        language,
+        subtitles: subtitles || '', // Empty string if not provided
         platforms: selectedPlatforms,
-        status: 'processing'
+        status: 'processing',
+        scheduled_publish: schedulePublish,
+        scheduled_publish_time: scheduledPublishTime
       };
 
       const newVideo = await createVideo(videoData);
@@ -73,7 +96,9 @@ const CreateVideo = () => {
 
       let audioBlob;
       try {
-        audioBlob = await textToSpeech(prompt);
+        // Use script instead of prompt if available, and pass voice profile and language
+        const textContent = script || prompt;
+        audioBlob = await textToSpeech(textContent, voiceProfile, language);
       } catch (error) {
         console.error('Error generating speech:', error);
         // Use a fallback audio if speech generation fails
@@ -85,14 +110,22 @@ const CreateVideo = () => {
       setProgress(40);
 
       // Estimate audio duration (in a real app, you'd calculate this properly)
-      const estimatedDuration = prompt.split(' ').length * 0.5; // rough estimate: 0.5 seconds per word
-      const captions = generateCaptions(prompt, estimatedDuration);
+      const textContent = script || prompt;
+      const estimatedDuration = textContent.split(' ').length * 0.5; // rough estimate: 0.5 seconds per word
+
+      // Use custom subtitles if provided, otherwise generate from text content
+      let captions;
+      if (subtitles && subtitles.trim() !== '') {
+        captions = generateCaptions(subtitles, estimatedDuration);
+      } else {
+        captions = generateCaptions(textContent, estimatedDuration);
+      }
 
       // 4. Generate video
       setProgressMessage('Generating video...');
       setProgress(60);
 
-      const videoBlob = await generateVideo(backgroundImage, audioBlob, captions);
+      const videoBlob = await generateVideo(backgroundImage, audioBlob, captions, music);
 
       // 5. Upload video to storage
       setProgressMessage('Uploading video...');
@@ -198,12 +231,48 @@ const CreateVideo = () => {
               <textarea
                 id="prompt"
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                onChange={(e) => {
+                  setPrompt(e.target.value);
+                  // If script is empty, update it with the prompt
+                  if (!script) {
+                    setScript(e.target.value);
+                  }
+                  // If subtitles is empty, update it with the prompt
+                  if (!subtitles) {
+                    setSubtitles(e.target.value);
+                  }
+                }}
                 placeholder="Describe what you want in your video..."
                 required
               ></textarea>
               <p className="form-help">
                 Be specific about the content, style, and tone you want for your video.
+              </p>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="script">Script (Optional)</label>
+              <textarea
+                id="script"
+                value={script}
+                onChange={(e) => setScript(e.target.value)}
+                placeholder="Edit the script for your video..."
+              ></textarea>
+              <p className="form-help">
+                Customize the script that will be used for the voiceover. If left empty, the prompt will be used.
+              </p>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="subtitles">Subtitles (Optional)</label>
+              <textarea
+                id="subtitles"
+                value={subtitles}
+                onChange={(e) => setSubtitles(e.target.value)}
+                placeholder="Edit the subtitles for your video..."
+              ></textarea>
+              <p className="form-help">
+                Customize the subtitles that will appear in the video. If left empty, the script will be used.
               </p>
             </div>
 
@@ -237,6 +306,107 @@ const CreateVideo = () => {
                     <i className="upload-icon">📷</i>
                     <p>Click to upload a background image</p>
                     <span>JPG, PNG or GIF, max 5MB</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="language">Language</label>
+              <select
+                id="language"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+              >
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="es-ES">Spanish</option>
+                <option value="fr-FR">French</option>
+                <option value="de-DE">German</option>
+                <option value="it-IT">Italian</option>
+                <option value="ja-JP">Japanese</option>
+                <option value="ko-KR">Korean</option>
+                <option value="zh-CN">Chinese (Simplified)</option>
+                <option value="pt-BR">Portuguese (Brazil)</option>
+                <option value="ru-RU">Russian</option>
+              </select>
+              <p className="form-help">
+                Select the language for the video content.
+              </p>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="voiceProfile">Voice Profile</label>
+              <select
+                id="voiceProfile"
+                value={voiceProfile}
+                onChange={(e) => setVoiceProfile(e.target.value)}
+              >
+                <option value="default">Default Voice</option>
+                <option value="male1">Male Voice 1</option>
+                <option value="male2">Male Voice 2</option>
+                <option value="female1">Female Voice 1</option>
+                <option value="female2">Female Voice 2</option>
+              </select>
+              <p className="form-help">
+                Select the voice profile for the voiceover.
+              </p>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="music">Background Music</label>
+              <select
+                id="music"
+                value={music}
+                onChange={(e) => setMusic(e.target.value)}
+              >
+                <option value="default">Default Music</option>
+                <option value="upbeat">Upbeat</option>
+                <option value="relaxed">Relaxed</option>
+                <option value="dramatic">Dramatic</option>
+                <option value="none">No Music</option>
+              </select>
+              <p className="form-help">
+                Select the background music for your video.
+              </p>
+            </div>
+
+            <div className="form-group">
+              <label>Publishing Options</label>
+              <div className="publishing-options">
+                <div className="schedule-option">
+                  <input
+                    type="checkbox"
+                    id="schedulePublish"
+                    checked={schedulePublish}
+                    onChange={() => setSchedulePublish(!schedulePublish)}
+                  />
+                  <label htmlFor="schedulePublish">Schedule Publishing</label>
+                </div>
+
+                {schedulePublish && (
+                  <div className="schedule-datetime">
+                    <div className="schedule-date">
+                      <label htmlFor="publishDate">Date:</label>
+                      <input
+                        type="date"
+                        id="publishDate"
+                        value={publishDate}
+                        onChange={(e) => setPublishDate(e.target.value)}
+                        min={new Date().toISOString().split('T')[0]} // Today's date as minimum
+                        required={schedulePublish}
+                      />
+                    </div>
+                    <div className="schedule-time">
+                      <label htmlFor="publishTime">Time:</label>
+                      <input
+                        type="time"
+                        id="publishTime"
+                        value={publishTime}
+                        onChange={(e) => setPublishTime(e.target.value)}
+                        required={schedulePublish}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
