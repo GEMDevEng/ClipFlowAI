@@ -76,14 +76,18 @@ export const AuthProvider = ({ children }) => {
   const updateUserProfile = async (displayName, avatarUrl) => {
     try {
       setError(null);
+      console.log('Updating profile with:', { displayName, avatarUrl });
+
       const { user } = await authService.updateProfile({
-        displayName: displayName || currentUser.user_metadata?.displayName,
-        avatarUrl: avatarUrl || currentUser.user_metadata?.avatarUrl
+        displayName: displayName || currentUser?.user_metadata?.displayName,
+        avatarUrl: avatarUrl || currentUser?.user_metadata?.avatarUrl
       });
 
       // Update local user state
       setCurrentUser(user);
+      return user;
     } catch (error) {
+      console.error('Error updating user profile:', error);
       setError(error.message);
       throw error;
     }

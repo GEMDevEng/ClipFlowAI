@@ -27,26 +27,55 @@
 
 .profile-avatar {
   margin-right: 20px;
+  position: relative;
 }
 
 .profile-avatar img {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .avatar-placeholder {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   background: #3f51b5;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
+  border: 3px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-upload {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.avatar-upload-label {
+  background: #f0f0f0;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  display: inline-block;
+}
+
+.avatar-upload-label:hover {
+  background: #e0e0e0;
+}
+
+.avatar-input {
+  display: none;
 }
 
 .profile-details p {
