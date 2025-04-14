@@ -66,6 +66,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       await authService.resetPassword(email);
     } catch (error) {
+      console.error('Auth context reset password error:', error);
       setError(error.message);
       throw error;
     }

@@ -16,15 +16,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: 'src/frontend/package-lock.json'
 
       - name: Install dependencies
-        run: |
-          npm install
-          cd src/frontend && npm install
+        run: cd src/frontend && npm ci
 
       - name: Build
-        run: npm run build
+        run: cd src/frontend && npm run build
         env:
           CI: false
           REACT_APP_SUPABASE_URL: ${{ secrets.REACT_APP_SUPABASE_URL }}
