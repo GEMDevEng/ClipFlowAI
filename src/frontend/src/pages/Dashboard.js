@@ -1,63 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react'; // Removed useEffect
 import { Link } from 'react-router-dom';
 import VideoCard from '../components/VideoCard';
+import { useVideos } from '../context/VideoContext'; // Import useVideos hook
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Use state from VideoContext
+  const { videos, loading, error } = useVideos(); 
   const [filter, setFilter] = useState('all');
 
-  useEffect(() => {
-    // This would be replaced with an actual API call
-    const fetchVideos = async () => {
-      try {
-        // Simulating API call with timeout
-        setTimeout(() => {
-          // Mock data
-          const mockVideos = [
-            {
-              _id: '1',
-              title: 'Top 10 Travel Hacks',
-              status: 'completed',
-              duration: 45,
-              createdAt: '2023-08-15T10:30:00Z',
-              thumbnailUrl: null
-            },
-            {
-              _id: '2',
-              title: 'Easy Cooking Tips',
-              status: 'processing',
-              duration: 30,
-              createdAt: '2023-08-16T14:20:00Z',
-              thumbnailUrl: null
-            },
-            {
-              _id: '3',
-              title: 'Fitness Routine for Beginners',
-              status: 'pending',
-              duration: 60,
-              createdAt: '2023-08-17T09:15:00Z',
-              thumbnailUrl: null
-            }
-          ];
-          
-          setVideos(mockVideos);
-          setLoading(false);
-        }, 1000);
-      } catch (err) {
-        setError('Failed to fetch videos');
-        setLoading(false);
-      }
-    };
-
-    fetchVideos();
-  }, []);
+  // No useEffect needed as VideoContext handles fetching
 
   const filteredVideos = videos.filter(video => {
     if (filter === 'all') return true;
-    return video.status === filter;
+    // Assuming video object has an 'id' property now, not '_id' based on VideoContext
+    return video.status === filter; 
   });
 
   return (
@@ -109,8 +66,9 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="videos-grid">
+          {/* Assuming video object has an 'id' property now, not '_id' */}
           {filteredVideos.map(video => (
-            <VideoCard key={video._id} video={video} />
+            <VideoCard key={video.id} video={video} /> 
           ))}
         </div>
       )}

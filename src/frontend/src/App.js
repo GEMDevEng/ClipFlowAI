@@ -10,6 +10,7 @@ import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
+import Analytics from './pages/Analytics'; // Import Analytics page
 import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
 import { VideoProvider } from './context/VideoContext';
@@ -45,14 +46,20 @@ function App() {
                 </PrivateRoute>
               } />
               <Route path="/profile" element={
-                <PrivateRoute>
-                  <Profile />
-                </PrivateRoute>
-              } />
-              <Route path="/404" element={<NotFound />} />
-              <Route path="*" element={<Navigate to="/404" replace />} />
-            </Routes>
-          </main>
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
+                } />
+                {/* Add Analytics Route */}
+                <Route path="/analytics" element={
+                  <PrivateRoute>
+                    <Analytics />
+                  </PrivateRoute>
+                } />
+                <Route path="/404" element={<NotFound />} />
+                <Route path="*" element={<Navigate to="/404" replace />} />
+              </Routes>
+            </main>
           <Footer />
         </div>
       </VideoProvider>

@@ -43,6 +43,9 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "gh-pages": "^6.3.0",
+    "jest": "^27.5.1"
   }
 }

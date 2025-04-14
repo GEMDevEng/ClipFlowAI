@@ -55,7 +55,7 @@ export const getVideoById = async (id) => {
  */
 export const createVideo = async (videoData) => {
   const { platforms, ...videoDetails } = videoData;
-  
+
   // Insert video record
   const { data: video, error: videoError } = await supabase
     .from(VIDEOS_TABLE)
@@ -102,7 +102,7 @@ export const createVideo = async (videoData) => {
  */
 export const updateVideo = async (id, videoData) => {
   const { platforms, ...videoDetails } = videoData;
-  
+
   // Update video record
   const { error: videoError } = await supabase
     .from(VIDEOS_TABLE)
@@ -226,4 +226,66 @@ export const updatePlatformStatus = async (videoId, platform, status, publishedU
   }
 
   return data;
+};
+
+/**
+ * Get analytics for a specific video
+ * @param {string} videoId - Video ID
+ * @returns {Promise<object>} - Analytics data
+ */
+export const getVideoAnalytics = async (videoId) => {
+  try {
+    // Get analytics from the videos table directly
+    const { data, error } = await supabase
+      .from(VIDEOS_TABLE)
+      .select('views, likes, shares')
+      .eq('id', videoId)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data || { views: 0, likes: 0, shares: 0 }; // Default values if no data
+  } catch (error) {
+    console.error('Error fetching video analytics:', error);
+    // Return default values if there's an error
+    return { views: 0, likes: 0, shares: 0 };
+  }
+};
+
+/**
+ * Get overall analytics for all videos of a user
+ * @param {string} userId - User ID
+ * @returns {Promise<object>} - Overall analytics data
+ */
+export const getOverallAnalytics = async (userId) => {
+  try {
+    // Get analytics from the videos table for all user's videos
+    const { data, error } = await supabase
+      .from(VIDEOS_TABLE)
+      .select('views, likes, shares')
+      .eq('user_id', userId);
+
+    if (error) {
+      throw error;
+    }
+
+    let totalViews = 0;
+    let totalLikes = 0;
+    let totalShares = 0;
+
+    // Sum up the analytics data
+    data.forEach(item => {
+      totalViews += item.views || 0;
+      totalLikes += item.likes || 0;
+      totalShares += item.shares || 0;
+    });
+
+    return { totalViews, totalLikes, totalShares };
+  } catch (error) {
+    console.error('Error fetching overall analytics:', error);
+    // Return default values if there's an error
+    return { totalViews: 0, totalLikes: 0, totalShares: 0 };
+  }
 };

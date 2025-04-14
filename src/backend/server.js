@@ -1,8 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+// Removed: const connectDB = require('./config/db');
 const telegramBot = require('./services/telegramBot');
+
+/**
+ * NOTE: This backend server is simplified as the application primarily uses Supabase
+ * for authentication, database, and storage operations directly from the frontend.
+ *
+ * The main purpose of this server is to handle auxiliary services like the Telegram bot
+ * that cannot be managed directly from the frontend. The MongoDB connection and related
+ * API routes have been removed to avoid architectural conflicts.
+ */
 
 // Load environment variables
 dotenv.config();
@@ -19,8 +28,8 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to ClipFlowAI API' });
 });
 
-// API routes
-app.use('/api/videos', require('./routes/videoRoutes'));
+// Removed: API routes for /api/videos
+// app.use('/api/videos', require('./routes/videoRoutes'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -33,16 +42,16 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
 
-  // Connect to database if MONGO_URI is provided
-  if (process.env.MONGO_URI) {
-    try {
-      await connectDB();
-    } catch (error) {
-      console.error('Database connection failed:', error.message);
-    }
-  } else {
-    console.log('No MongoDB URI provided, skipping database connection');
-  }
+  // Removed: Database connection logic
+  // if (process.env.MONGO_URI) {
+  //   try {
+  //     await connectDB();
+  //   } catch (error) {
+  //     console.error('Database connection failed:', error.message);
+  //   }
+  // } else {
+  //   console.log('No MongoDB URI provided, skipping database connection');
+  // }
 
   // Initialize Telegram bot if token is provided
   if (process.env.TELEGRAM_BOT_TOKEN) {

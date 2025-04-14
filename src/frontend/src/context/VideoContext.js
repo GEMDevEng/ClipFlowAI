@@ -147,6 +147,31 @@ export const VideoProvider = ({ children }) => {
     }
   };
 
+  // Get analytics for a specific video
+  const getVideoAnalytics = async (videoId) => {
+    try {
+      setError(null);
+      return await databaseService.getVideoAnalytics(videoId);
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  };
+
+  // Get overall analytics for all videos of a user
+  const getOverallAnalytics = async () => {
+    try {
+      setError(null);
+      if (!currentUser) {
+        throw new Error('You must be logged in to view analytics');
+      }
+      return await databaseService.getOverallAnalytics(currentUser.id);
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  };
+
   const value = {
     videos,
     loading,
@@ -156,7 +181,9 @@ export const VideoProvider = ({ children }) => {
     updateVideo,
     deleteVideo,
     uploadVideo,
-    uploadThumbnail
+    uploadThumbnail,
+    getVideoAnalytics,
+    getOverallAnalytics
   };
 
   return (

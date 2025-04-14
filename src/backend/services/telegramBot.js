@@ -14,10 +14,10 @@ const initBot = async () => {
     // Get bot info to verify token is valid
     const response = await axios.get(`${API_URL}/getMe`);
     console.log(`Telegram bot initialized: @${response.data.result.username}`);
-    
+
     // Start polling for updates
     startPolling();
-    
+
     return true;
   } catch (error) {
     console.error('Failed to initialize Telegram bot:', error.message);
@@ -30,7 +30,7 @@ const initBot = async () => {
  */
 const startPolling = async () => {
   let offset = 0;
-  
+
   const poll = async () => {
     try {
       // Get updates with long polling
@@ -40,9 +40,9 @@ const startPolling = async () => {
           timeout: 30
         }
       });
-      
+
       const updates = response.data.result;
-      
+
       if (updates.length > 0) {
         // Process each update
         for (const update of updates) {
@@ -51,7 +51,7 @@ const startPolling = async () => {
           offset = update.update_id + 1;
         }
       }
-      
+
       // Continue polling
       setTimeout(poll, 1000);
     } catch (error) {
@@ -60,7 +60,7 @@ const startPolling = async () => {
       setTimeout(poll, 5000);
     }
   };
-  
+
   // Start the polling loop
   poll();
 };
@@ -74,9 +74,9 @@ const processUpdate = async (update) => {
     const { message } = update;
     const chatId = message.chat.id;
     const text = message.text;
-    
+
     console.log(`Received message from ${message.from.username || message.from.id}: ${text}`);
-    
+
     // Process commands
     if (text.startsWith('/')) {
       await processCommand(chatId, text);
@@ -92,13 +92,13 @@ const processUpdate = async (update) => {
  */
 const processCommand = async (chatId, command) => {
   const cmd = command.split(' ')[0].toLowerCase();
-  
+
   switch (cmd) {
     case '/start':
       await sendMessage(chatId, 'Welcome to ClipFlowAI! Send me a prompt to generate a video.');
       break;
     case '/help':
-      await sendMessage(chatId, 
+      await sendMessage(chatId,
         'ClipFlowAI Bot Commands:\n' +
         '/start - Start the bot\n' +
         '/help - Show this help message\n' +
@@ -116,39 +116,27 @@ const processCommand = async (chatId, command) => {
 
 /**
  * Process a video generation prompt
+ *
+ * NOTE: This is a placeholder implementation for future integration.
+ * The Telegram bot is not fully integrated with the actual video processing system yet.
+ * This feature is planned for a future release and currently uses simulated logic.
  */
 const processPrompt = async (chatId, prompt) => {
   try {
-    await sendMessage(chatId, 'Processing your video request...');
-    
-    // This would be replaced with actual API call to the backend
-    // For now, we'll just simulate a delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    await sendMessage(chatId, 
-      '✅ Your video generation has started!\n\n' +
-      'Prompt: ' + prompt + '\n\n' +
-      'Estimated completion time: 2 minutes\n' +
-      'You will be notified when your video is ready.'
-    );
-    
-    // Simulate video completion after a delay
-    setTimeout(async () => {
-      await sendMessage(chatId, 
-        '🎬 Your video is ready!\n\n' +
-        'Title: Auto-generated from your prompt\n' +
-        'Duration: 30 seconds\n\n' +
-        'Your video has been published to:\n' +
-        '- TikTok ✅\n' +
-        '- Instagram Reels ✅\n' +
-        '- YouTube Shorts ✅\n\n' +
-        'Check your dashboard for details: https://clipflowai.com/dashboard'
-      );
-    }, 10000);
-    
+    await sendMessage(chatId, `Received prompt: "${prompt}". Starting video generation process...`);
+
+    // TODO: Integrate with actual video generation service (e.g., call videoGenerator.js)
+    // const videoDetails = await videoGenerator.createVideoFromPrompt(prompt);
+
+    // TODO: Once video is processed and potentially published, send a completion notification
+    // Example: await sendVideoCompletionMessage(chatId, videoDetails);
+
+    // Placeholder message for now
+    await sendMessage(chatId, 'Video generation initiated. You will be notified upon completion.');
+
   } catch (error) {
     console.error('Error processing prompt:', error.message);
-    await sendMessage(chatId, 'Sorry, there was an error processing your request. Please try again later.');
+    await sendMessage(chatId, 'Sorry, there was an error processing your video request. Please try again later.');
   }
 };
 

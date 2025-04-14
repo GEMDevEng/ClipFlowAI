@@ -44,6 +44,9 @@ const Header = () => {
                 <li>
                   <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
                 </li>
+                <li> {/* Add Analytics Link */}
+                  <Link to="/analytics" onClick={() => setMobileMenuOpen(false)}>Analytics</Link>
+                </li>
                 <li>
                   <Link to="/create" className="btn" onClick={() => setMobileMenuOpen(false)}>Create Video</Link>
                 </li>
