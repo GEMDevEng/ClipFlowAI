@@ -33,8 +33,12 @@ jobs:
           REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.REACT_APP_SUPABASE_ANON_KEY }}
           REACT_APP_SITE_URL: https://gemdeveng.github.io/ClipFlowAI
 
+      - name: Copy 404.html to build directory
+        run: cp src/frontend/public/404.html src/frontend/build/
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: src/frontend/build
           branch: gh-pages
+          clean: true
