@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { checkRateLimit, recordSuccessfulAuth } from '../services/securityService';
@@ -10,12 +10,19 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   // Get the redirect path from location state or default to dashboard
   const from = location.state?.from || '/dashboard';
+
+  // Check if user is already logged in
+  useEffect(() => {
+    if (currentUser) {
+      navigate(from, { replace: true });
+    }
+  }, [currentUser, navigate, from]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

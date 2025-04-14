@@ -98,8 +98,20 @@ export const AuthProvider = ({ children }) => {
     // Get initial session
     const getInitialSession = async () => {
       try {
+        // Check for access token in URL hash (for OAuth redirects)
+        if (window.location.hash && window.location.hash.includes('access_token')) {
+          // Wait for Supabase to process the token
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
         const user = await authService.getCurrentUser();
         setCurrentUser(user);
+
+        // If we have a hash with tokens but we're not on the login page, redirect to login
+        if (window.location.hash && window.location.hash.includes('access_token') &&
+            !window.location.pathname.includes('/login')) {
+          window.location.href = window.location.origin + '/login';
+        }
       } catch (error) {
         console.error('Error getting initial session:', error);
       } finally {
@@ -111,6 +123,7 @@ export const AuthProvider = ({ children }) => {
 
     // Set up auth state change listener
     const unsubscribe = authService.onAuthStateChange((user) => {
+      console.log('Auth state changed:', user);
       setCurrentUser(user);
     });
 
