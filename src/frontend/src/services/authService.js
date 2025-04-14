@@ -48,7 +48,10 @@ export const signIn = async (email, password) => {
  */
 export const signInWithGoogle = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google'
+    provider: 'google',
+    options: {
+      redirectTo: 'https://gemdeveng.github.io/ClipFlowAI/login'
+    }
   });
 
   if (error) {
