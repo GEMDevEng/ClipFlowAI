@@ -1,0 +1,32 @@
+{
+  "title": "ClipFlowAI Documentation",
+  "description": "Documentation for ClipFlowAI, an automated AI system to generate & publish short-form videos",
+  "author": "GEMDevEng",
+  "language": "en",
+  "structure": {
+    "readme": "index.md",
+    "summary": "SUMMARY.md"
+  },
+  "plugins": [
+    "expandable-chapters",
+    "copy-code-button",
+    "search",
+    "github",
+    "edit-link",
+    "prism",
+    "highlight",
+    "theme-default"
+  ],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/GEMDevEng/ClipFlowAI"
+    },
+    "edit-link": {
+      "base": "https://github.com/GEMDevEng/ClipFlowAI/edit/main/docs/gitbook",
+      "label": "Edit This Page"
+    }
+  },
+  "styles": {
+    "website": "styles/website.css"
+  }
+}
