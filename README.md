@@ -12,10 +12,14 @@ ClipFlowAI is a full-code solution for automating the creation and publication o
 - **Text-to-Speech**: Generate voiceovers using Web Speech API
 - **Automatic Captions**: Create synchronized captions for your videos
 - **Social Media Sharing**: Share your videos to popular platforms
-- **User Authentication**: Secure user accounts with Supabase Authentication
-- **Cloud Storage**: Store your videos and images with Supabase Storage
+- **User Authentication**: Secure user accounts with Supabase Authentication and Google OAuth
+- **Cloud Storage**: Store your videos, images, and profile avatars with Supabase Storage
 - **PostgreSQL Database**: Powerful database capabilities with Supabase
 - **Responsive Design**: Works on desktop and mobile devices
+- **Analytics Dashboard**: Track video performance with real-time analytics
+- **Security Features**: Rate limiting, account protection, and security activity tracking
+- **Profile Management**: Upload profile pictures and manage account settings
+- **Password Recovery**: Secure password reset functionality
 
 ## $0 Budget Approach
 

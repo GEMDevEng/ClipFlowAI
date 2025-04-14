@@ -42,6 +42,10 @@ Once your project is ready, you'll need to create the necessary database tables:
      - `published_at` (type: timestamp with time zone, Nullable: Yes)
      - `user_id` (type: uuid, Nullable: No)
      - `user_display_name` (type: text, Nullable: Yes)
+     - `views` (type: integer, Default: 0)
+     - `likes` (type: integer, Default: 0)
+     - `shares` (type: integer, Default: 0)
+     - `comments` (type: integer, Default: 0)
 4. Click "Save"
 
 ### Platforms Table
@@ -59,6 +63,41 @@ Once your project is ready, you'll need to create the necessary database tables:
      - `published_at` (type: timestamp with time zone, Nullable: Yes)
      - `created_at` (type: timestamp with time zone, Default: `now()`)
      - `updated_at` (type: timestamp with time zone, Nullable: Yes)
+3. Click "Save"
+
+### Analytics Table
+
+1. Click "New Table"
+2. Enter the following details:
+   - Name: `analytics`
+   - Enable Row Level Security (RLS): Yes
+   - Columns:
+     - `id` (type: uuid, Primary Key, Default: `uuid_generate_v4()`)
+     - `video_id` (type: uuid, Nullable: No)
+     - `platform` (type: text, Nullable: No)
+     - `views` (type: integer, Default: 0)
+     - `likes` (type: integer, Default: 0)
+     - `shares` (type: integer, Default: 0)
+     - `comments` (type: integer, Default: 0)
+     - `date` (type: date, Default: `now()`)
+     - `created_at` (type: timestamp with time zone, Default: `now()`)
+     - `updated_at` (type: timestamp with time zone, Nullable: Yes)
+3. Click "Save"
+
+### Auth Attempts Table
+
+1. Click "New Table"
+2. Enter the following details:
+   - Name: `auth_attempts`
+   - Enable Row Level Security (RLS): Yes
+   - Columns:
+     - `id` (type: uuid, Primary Key, Default: `uuid_generate_v4()`)
+     - `ip_address` (type: text, Nullable: No)
+     - `email` (type: text, Nullable: Yes)
+     - `attempt_type` (type: text, Nullable: No)
+     - `success` (type: boolean, Default: false)
+     - `created_at` (type: timestamp with time zone, Default: `now()`)
+     - `user_id` (type: uuid, Nullable: Yes)
 3. Click "Save"
 
 ## Step 3: Set Up Foreign Key Relationships
@@ -141,6 +180,7 @@ Once your project is ready, you'll need to create the necessary database tables:
 4. Make sure "Public" is selected
 5. Click "Create bucket"
 6. Repeat the process to create a "thumbnails" bucket
+7. Repeat the process to create a "profiles" bucket for user avatars
 
 ### Set Up Storage Policies
 
@@ -186,8 +226,81 @@ Once your project is ready, you'll need to create the necessary database tables:
    - Create OAuth credentials
    - Add the Supabase redirect URL
    - Copy the Client ID and Client Secret to Supabase
+5. Configure Authentication Settings:
+   - Go to "Settings" under Authentication
+   - Set "Site URL" to your application URL (e.g., https://gemdeveng.github.io/ClipFlowAI)
+   - Add your application URL to "Redirect URLs" (e.g., https://gemdeveng.github.io/ClipFlowAI/login)
+   - Enable "Auto-confirm email" for easier testing
+   - Enable "Allow unverified email sign-ins" for easier testing
 
-## Step 7: Get Your Supabase Configuration
+## Step 7: Set Up Database Functions
+
+1. Go to the "SQL Editor" in the sidebar
+2. Create a new query and paste the following SQL to create rate limiting functions:
+
+```sql
+-- Function to check for rate limiting
+CREATE OR REPLACE FUNCTION public.check_auth_rate_limit(p_ip_address TEXT, p_email TEXT, p_attempt_type TEXT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_count INTEGER;
+  v_max_attempts INTEGER := 5; -- Maximum attempts allowed
+  v_window INTERVAL := '15 minutes'; -- Time window for rate limiting
+BEGIN
+  -- Count recent attempts from this IP address
+  SELECT COUNT(*) INTO v_count
+  FROM public.auth_attempts
+  WHERE ip_address = p_ip_address
+    AND attempt_type = p_attempt_type
+    AND created_at > NOW() - v_window;
+
+  -- If IP has too many attempts, block it
+  IF v_count >= v_max_attempts THEN
+    RETURN FALSE;
+  END IF;
+
+  -- If email is provided, also check rate limiting by email
+  IF p_email IS NOT NULL THEN
+    SELECT COUNT(*) INTO v_count
+    FROM public.auth_attempts
+    WHERE email = p_email
+      AND attempt_type = p_attempt_type
+      AND created_at > NOW() - v_window;
+
+    -- If email has too many attempts, block it
+    IF v_count >= v_max_attempts THEN
+      RETURN FALSE;
+    END IF;
+  END IF;
+
+  -- Record this attempt
+  INSERT INTO public.auth_attempts (ip_address, email, attempt_type, success)
+  VALUES (p_ip_address, p_email, p_attempt_type, FALSE);
+
+  RETURN TRUE;
+END;
+$$;
+
+-- Function to record successful authentication
+CREATE OR REPLACE FUNCTION public.record_successful_auth(p_ip_address TEXT, p_email TEXT, p_attempt_type TEXT, p_user_id UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  -- Record successful attempt
+  INSERT INTO public.auth_attempts (ip_address, email, attempt_type, success, user_id)
+  VALUES (p_ip_address, p_email, p_attempt_type, TRUE, p_user_id);
+END;
+$$;
+```
+
+3. Click "Run" to create the functions
+
+## Step 8: Get Your Supabase Configuration
 
 1. Go to the "Settings" section in the sidebar
 2. Click on "API"
@@ -195,7 +308,7 @@ Once your project is ready, you'll need to create the necessary database tables:
    - URL: Your Supabase project URL
    - anon/public key: Your public API key
 
-## Step 8: Add Supabase Configuration to Your Project
+## Step 9: Add Supabase Configuration to Your Project
 
 1. Create a `.env` file in the `src/frontend` directory
 2. Add the following environment variables:
