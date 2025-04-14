@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Page Not Found - ClipFlowAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      padding: 40px 20px;
+    }
+    h1 {
+      font-size: 6rem;
+      margin: 0;
+      color: #3f51b5;
+    }
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 30px;
+      color: #666;
+    }
+    .btn {
+      display: inline-block;
+      background: #3f51b5;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #303f9f;
+    }
+  </style>
+  <script>
+    // Redirect to the homepage with the current path as a hash
+    window.onload = function() {
+      // Get the current path
+      var path = window.location.pathname;
+      
+      // Redirect to the homepage with the path as a hash
+      window.location.href = window.location.origin + '/#' + path;
+    };
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>404</h1>
+    <h2>Page Not Found</h2>
+    <p>The page you are looking for does not exist or has been moved.</p>
+    <a href="/" class="btn">Go to Home</a>
+  </div>
+</body>
+</html>

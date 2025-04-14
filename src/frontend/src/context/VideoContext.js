@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import * as firebaseService from '../services/firebaseService';
+import * as databaseService from '../services/databaseService';
+import * as storageService from '../services/storageService';
 
 // Create context
 const VideoContext = createContext();
@@ -19,7 +20,7 @@ export const VideoProvider = ({ children }) => {
         try {
           setLoading(true);
           setError(null);
-          const fetchedVideos = await firebaseService.getAllVideos(currentUser.uid);
+          const fetchedVideos = await databaseService.getAllVideos(currentUser.id);
           setVideos(fetchedVideos);
         } catch (error) {
           setError('Failed to fetch videos');
@@ -40,24 +41,24 @@ export const VideoProvider = ({ children }) => {
   const createVideo = async (videoData) => {
     try {
       setError(null);
-      
+
       if (!currentUser) {
         throw new Error('You must be logged in to create a video');
       }
-      
+
       // Add user ID to video data
       const videoWithUser = {
         ...videoData,
-        userId: currentUser.uid,
-        userDisplayName: currentUser.displayName || 'Anonymous'
+        user_id: currentUser.id,
+        user_display_name: currentUser.user_metadata?.displayName || currentUser.email.split('@')[0]
       };
-      
-      // Create video in Firebase
-      const newVideo = await firebaseService.createVideo(videoWithUser);
-      
+
+      // Create video in Supabase
+      const newVideo = await databaseService.createVideo(videoWithUser);
+
       // Update local state
       setVideos(prevVideos => [newVideo, ...prevVideos]);
-      
+
       return newVideo;
     } catch (error) {
       setError(error.message);
@@ -69,7 +70,7 @@ export const VideoProvider = ({ children }) => {
   const getVideoById = async (id) => {
     try {
       setError(null);
-      return await firebaseService.getVideoById(id);
+      return await databaseService.getVideoById(id);
     } catch (error) {
       setError(error.message);
       throw error;
@@ -80,17 +81,17 @@ export const VideoProvider = ({ children }) => {
   const updateVideo = async (id, videoData) => {
     try {
       setError(null);
-      
-      // Update video in Firebase
-      const updatedVideo = await firebaseService.updateVideo(id, videoData);
-      
+
+      // Update video in Supabase
+      const updatedVideo = await databaseService.updateVideo(id, videoData);
+
       // Update local state
-      setVideos(prevVideos => 
-        prevVideos.map(video => 
+      setVideos(prevVideos =>
+        prevVideos.map(video =>
           video.id === id ? { ...video, ...updatedVideo } : video
         )
       );
-      
+
       return updatedVideo;
     } catch (error) {
       setError(error.message);
@@ -102,10 +103,10 @@ export const VideoProvider = ({ children }) => {
   const deleteVideo = async (id) => {
     try {
       setError(null);
-      
-      // Delete video from Firebase
-      await firebaseService.deleteVideo(id);
-      
+
+      // Delete video from Supabase
+      await databaseService.deleteVideo(id);
+
       // Update local state
       setVideos(prevVideos => prevVideos.filter(video => video.id !== id));
     } catch (error) {
@@ -118,12 +119,12 @@ export const VideoProvider = ({ children }) => {
   const uploadVideo = async (videoFile) => {
     try {
       setError(null);
-      
+
       if (!currentUser) {
         throw new Error('You must be logged in to upload a video');
       }
-      
-      return await firebaseService.uploadVideo(videoFile, currentUser.uid);
+
+      return await storageService.uploadVideo(videoFile, currentUser.id);
     } catch (error) {
       setError(error.message);
       throw error;
@@ -134,12 +135,12 @@ export const VideoProvider = ({ children }) => {
   const uploadThumbnail = async (imageFile) => {
     try {
       setError(null);
-      
+
       if (!currentUser) {
         throw new Error('You must be logged in to upload a thumbnail');
       }
-      
-      return await firebaseService.uploadThumbnail(imageFile, currentUser.uid);
+
+      return await storageService.uploadThumbnail(imageFile, currentUser.id);
     } catch (error) {
       setError(error.message);
       throw error;

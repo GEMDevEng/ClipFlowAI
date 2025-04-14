@@ -12,15 +12,16 @@ ClipFlowAI is a full-code solution for automating the creation and publication o
 - **Text-to-Speech**: Generate voiceovers using Web Speech API
 - **Automatic Captions**: Create synchronized captions for your videos
 - **Social Media Sharing**: Share your videos to popular platforms
-- **User Authentication**: Secure user accounts with Firebase Authentication
-- **Cloud Storage**: Store your videos and images with Firebase Storage
+- **User Authentication**: Secure user accounts with Supabase Authentication
+- **Cloud Storage**: Store your videos and images with Supabase Storage
+- **PostgreSQL Database**: Powerful database capabilities with Supabase
 - **Responsive Design**: Works on desktop and mobile devices
 
 ## $0 Budget Approach
 
 This project is designed to be completely free to set up and run:
 
-- **Firebase Free Tier**: Authentication, Firestore database, and Storage
+- **Supabase Free Tier**: Authentication, PostgreSQL database, and Storage
 - **GitHub Pages**: Free hosting for the web application
 - **Client-side Processing**: No server costs as processing happens in the browser
 - **Free APIs**: Utilizing free APIs and libraries for core functionality
@@ -35,7 +36,7 @@ This project is designed to be completely free to set up and run:
 │   │   └── src/              # React source code
 │   │       ├── components/   # Reusable components
 │   │       ├── context/      # React context providers
-│   │       ├── firebase/     # Firebase configuration
+│   │       ├── supabase/     # Supabase configuration
 │   │       ├── pages/        # Page components
 │   │       └── services/     # Service modules
 ├── tests/                    # Test files
@@ -49,7 +50,7 @@ This project is designed to be completely free to set up and run:
 
 - Node.js (v14 or higher)
 - npm or yarn
-- A Firebase account (free tier)
+- A Supabase account (free tier)
 
 ### Installation
 
@@ -66,23 +67,19 @@ This project is designed to be completely free to set up and run:
    npm run install:all
    ```
 
-3. Create a Firebase project and configure it:
-   - Go to [Firebase Console](https://console.firebase.google.com/)
+3. Create a Supabase project and configure it:
+   - Go to [Supabase](https://supabase.com/)
    - Create a new project
-   - Enable Authentication (Email/Password and Google)
-   - Create a Firestore database
-   - Enable Storage
-   - Get your Firebase configuration
+   - Set up Authentication (Email/Password and Google)
+   - Create database tables (see SUPABASE_SETUP.md for details)
+   - Set up Storage buckets
+   - Get your Supabase URL and anon key
 
-4. Create a `.env` file in the `src/frontend` directory with your Firebase configuration:
+4. Create a `.env` file in the `src/frontend` directory with your Supabase configuration:
 
    ```env
-   REACT_APP_FIREBASE_API_KEY=your_api_key
-   REACT_APP_FIREBASE_AUTH_DOMAIN=your_auth_domain
-   REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-   REACT_APP_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-   REACT_APP_FIREBASE_APP_ID=your_app_id
+   REACT_APP_SUPABASE_URL=your_supabase_url
+   REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
 
 5. Start the development server:

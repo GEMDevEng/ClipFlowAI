@@ -1,0 +1,23 @@
+-- Drop the existing platforms table if it exists
+DROP TABLE IF EXISTS platforms;
+
+-- Create the platforms table with the foreign key constraint
+CREATE TABLE platforms (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  video_id UUID NOT NULL,
+  name TEXT NOT NULL,
+  status TEXT DEFAULT 'pending',
+  published_url TEXT,
+  published_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ,
+  
+  -- Add foreign key constraint
+  CONSTRAINT fk_video
+    FOREIGN KEY (video_id)
+    REFERENCES videos(id)
+    ON DELETE CASCADE
+);
+
+-- Enable RLS on the platforms table
+ALTER TABLE platforms ENABLE ROW LEVEL SECURITY;

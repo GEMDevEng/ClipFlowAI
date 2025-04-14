@@ -1,0 +1,5 @@
+CREATE POLICY "Users can update platforms for their videos" 
+ON platforms
+FOR UPDATE
+USING (auth.uid() IN (SELECT user_id FROM videos WHERE id = video_id))
+WITH CHECK (auth.uid() IN (SELECT user_id FROM videos WHERE id = video_id));

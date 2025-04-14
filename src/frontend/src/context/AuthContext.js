@@ -1,15 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  sendPasswordResetEmail,
-  updateProfile
-} from 'firebase/auth';
-import { auth } from '../firebase/config';
+import { supabase } from '../supabase/config';
+import * as authService from '../services/authService';
 
 // Create context
 const AuthContext = createContext();
@@ -24,14 +15,8 @@ export const AuthProvider = ({ children }) => {
   const signup = async (email, password, displayName) => {
     try {
       setError(null);
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      
-      // Update profile with display name
-      await updateProfile(userCredential.user, {
-        displayName
-      });
-      
-      return userCredential.user;
+      const { user } = await authService.signUp(email, password, { displayName });
+      return user;
     } catch (error) {
       setError(error.message);
       throw error;
@@ -42,8 +27,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setError(null);
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      return userCredential.user;
+      const { user } = await authService.signIn(email, password);
+      return user;
     } catch (error) {
       setError(error.message);
       throw error;
@@ -54,9 +39,8 @@ export const AuthProvider = ({ children }) => {
   const loginWithGoogle = async () => {
     try {
       setError(null);
-      const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(auth, provider);
-      return userCredential.user;
+      const { user } = await authService.signInWithGoogle();
+      return user;
     } catch (error) {
       setError(error.message);
       throw error;
@@ -67,7 +51,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       setError(null);
-      await signOut(auth);
+      await authService.signOut();
     } catch (error) {
       setError(error.message);
       throw error;
@@ -78,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   const resetPassword = async (email) => {
     try {
       setError(null);
-      await sendPasswordResetEmail(auth, email);
+      await authService.resetPassword(email);
     } catch (error) {
       setError(error.message);
       throw error;
@@ -86,20 +70,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Update user profile
-  const updateUserProfile = async (displayName, photoURL) => {
+  const updateUserProfile = async (displayName, avatarUrl) => {
     try {
       setError(null);
-      await updateProfile(auth.currentUser, {
-        displayName: displayName || auth.currentUser.displayName,
-        photoURL: photoURL || auth.currentUser.photoURL
+      const { user } = await authService.updateProfile({
+        displayName: displayName || currentUser.user_metadata?.displayName,
+        avatarUrl: avatarUrl || currentUser.user_metadata?.avatarUrl
       });
-      
+
       // Update local user state
-      setCurrentUser({
-        ...currentUser,
-        displayName: displayName || currentUser.displayName,
-        photoURL: photoURL || currentUser.photoURL
-      });
+      setCurrentUser(user);
     } catch (error) {
       setError(error.message);
       throw error;
@@ -108,13 +88,29 @@ export const AuthProvider = ({ children }) => {
 
   // Listen for auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    // Get initial session
+    const getInitialSession = async () => {
+      try {
+        const user = await authService.getCurrentUser();
+        setCurrentUser(user);
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getInitialSession();
+
+    // Set up auth state change listener
+    const unsubscribe = authService.onAuthStateChange((user) => {
       setCurrentUser(user);
-      setLoading(false);
     });
 
     // Cleanup subscription
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const value = {
