@@ -21,6 +21,10 @@ yarn-error.log*
 /build
 /dist
 /src/frontend/build
+/temp-deploy/
+*.tar.gz
+*.zip
+frontend-deployment.tar.gz
 
 # Coverage directory used by tools like istanbul
 coverage
