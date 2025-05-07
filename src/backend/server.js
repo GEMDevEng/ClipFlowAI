@@ -40,10 +40,11 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to ClipFlowAI API' });
 });
 
-// Removed: API routes for /api/videos
-// app.use('/api/videos', require('./routes/videoRoutes'));
-
-// Add the payment routes
+// API routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/videos', require('./routes/videos'));
+app.use('/api/analytics', require('./routes/analytics'));
+app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
 
 // Error handling middleware
@@ -157,4 +158,10 @@ process.on('unhandledRejection', (err) => {
   server.close(() => process.exit(1));
 });
 
-module.exports = app; // For testing purposes
+// Export app for testing purposes
+module.exports = app;
+
+// Export createServer function for integration tests
+module.exports.createServer = () => {
+  return { app, server };
+};
