@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import CreateVideo from './pages/CreateVideo';
@@ -10,60 +10,81 @@ import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
-import Analytics from './pages/Analytics'; // Import Analytics page
+import Analytics from './pages/Analytics';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './components/common/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
 import { VideoProvider } from './context/VideoContext';
+import { ROUTES } from './config/constants';
+import { initFFmpeg } from './services/video/videoProcessor';
 import './App.css';
 
+/**
+ * Main App component
+ * @returns {JSX.Element} - App component
+ */
 function App() {
-  // Get the base URL for GitHub Pages
-  const basename = process.env.PUBLIC_URL || '';
+  // Initialize FFmpeg when the app loads
+  useEffect(() => {
+    const loadFFmpeg = async () => {
+      try {
+        await initFFmpeg();
+      } catch (error) {
+        console.error('Error initializing FFmpeg:', error);
+      }
+    };
+
+    loadFFmpeg();
+  }, []);
 
   return (
     <AuthProvider>
       <VideoProvider>
-        <div className="App">
+        <div className="App min-h-screen flex flex-col">
           <Header />
-          <main className="container">
+          <main className="container mx-auto px-4 flex-grow">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/dashboard" element={
+              <Route path={ROUTES.HOME} element={<Home />} />
+              <Route path={ROUTES.LOGIN} element={<Login />} />
+              <Route path={ROUTES.SIGNUP} element={<Signup />} />
+              <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+              <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
+
+              <Route path={ROUTES.DASHBOARD} element={
                 <PrivateRoute>
                   <Dashboard />
                 </PrivateRoute>
               } />
-              <Route path="/create" element={
+
+              <Route path={ROUTES.CREATE_VIDEO} element={
                 <PrivateRoute>
                   <CreateVideo />
                 </PrivateRoute>
               } />
-              <Route path="/videos/:id" element={
+
+              <Route path={ROUTES.VIDEO_DETAILS} element={
                 <PrivateRoute>
                   <VideoDetails />
                 </PrivateRoute>
               } />
-              <Route path="/profile" element={
-                  <PrivateRoute>
-                    <Profile />
-                  </PrivateRoute>
-                } />
-                {/* Add Analytics Route */}
-                <Route path="/analytics" element={
-                  <PrivateRoute>
-                    <Analytics />
-                  </PrivateRoute>
-                } />
-                <Route path="/404" element={<NotFound />} />
-                <Route path="*" element={<Navigate to="/404" replace />} />
-              </Routes>
-            </main>
+
+              <Route path={ROUTES.PROFILE} element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              } />
+
+              <Route path={ROUTES.ANALYTICS} element={
+                <PrivateRoute>
+                  <Analytics />
+                </PrivateRoute>
+              } />
+
+              <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
+              <Route path="*" element={<Navigate to={ROUTES.NOT_FOUND} replace />} />
+            </Routes>
+          </main>
           <Footer />
         </div>
       </VideoProvider>

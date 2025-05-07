@@ -1,0 +1,47 @@
+/* VideoCard component styles */
+
+/* Animation for hover effect */
+@keyframes card-hover {
+  0% {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Status colors */
+.status-pending {
+  color: #f59e0b; /* Amber-500 */
+}
+
+.status-processing {
+  color: #3b82f6; /* Blue-500 */
+}
+
+.status-completed {
+  color: #10b981; /* Emerald-500 */
+}
+
+.status-published {
+  color: #8b5cf6; /* Violet-500 */
+}
+
+.status-failed {
+  color: #ef4444; /* Red-500 */
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .video-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .video-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

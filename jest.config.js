@@ -13,5 +13,15 @@ module.exports = {
     '!**/vendor/**'
   ],
   moduleDirectories: ['node_modules', 'src'],
-  testTimeout: 10000 // Increase timeout to 10 seconds
+  testTimeout: 10000, // Increase timeout to 10 seconds
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  verbose: true,
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70
+    }
+  }
 };

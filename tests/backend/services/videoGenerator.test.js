@@ -47,6 +47,12 @@ describe('videoGenerator', () => {
 
   describe('generateVoiceover', () => {
     it('should generate a voiceover from text', async () => {
+      // Mock the setTimeout function to resolve immediately
+      jest.spyOn(global, 'setTimeout').mockImplementation((callback) => {
+        callback();
+        return 123; // Return a timeout ID
+      });
+
       // Call the function
       const text = 'This is a test text for voiceover';
       const result = await generateVoiceover(text);
@@ -74,6 +80,12 @@ describe('videoGenerator', () => {
 
   describe('generateCaptions', () => {
     it('should generate captions for an audio file', async () => {
+      // Mock the setTimeout function to resolve immediately
+      jest.spyOn(global, 'setTimeout').mockImplementation((callback) => {
+        callback();
+        return 123; // Return a timeout ID
+      });
+
       // Call the function
       const audioUrl = 'https://example.com/audio.mp3';
       const result = await generateCaptions(audioUrl);
