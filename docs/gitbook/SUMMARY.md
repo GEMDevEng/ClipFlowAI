@@ -21,6 +21,7 @@
 
 ## Technical Documentation
 
+* [Project Report](technical-documentation/project-report.md)
 * [Architecture Overview](technical-documentation/architecture.md)
 * [Frontend Structure](technical-documentation/frontend-structure.md)
 * [Backend Structure](technical-documentation/backend-structure.md)
