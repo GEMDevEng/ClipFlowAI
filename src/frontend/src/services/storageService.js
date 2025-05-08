@@ -1,4 +1,4 @@
-import { supabase } from '../supabase/config';
+import { supabase } from '../config/supabase';
 
 // Storage bucket names
 const VIDEOS_BUCKET = 'videos';

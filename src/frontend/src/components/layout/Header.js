@@ -39,8 +39,8 @@ const Header = () => {
           ClipFlowAI
         </Link>
 
-        <button 
-          className="md:hidden focus:outline-none" 
+        <button
+          className="md:hidden focus:outline-none"
           onClick={toggleMobileMenu}
           aria-label="Toggle menu"
         >
@@ -52,8 +52,8 @@ const Header = () => {
         <nav className={`absolute md:relative top-16 left-0 right-0 bg-white md:top-0 md:flex transition-all duration-300 ease-in-out ${mobileMenuOpen ? 'block' : 'hidden md:block'} z-50`}>
           <ul className="flex flex-col md:flex-row md:items-center md:space-x-6 p-4 md:p-0">
             <li className="py-2 md:py-0">
-              <Link 
-                to={ROUTES.HOME} 
+              <Link
+                to={ROUTES.HOME}
                 className="text-gray-700 hover:text-purple-600"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -65,8 +65,8 @@ const Header = () => {
               // Links for authenticated users
               <>
                 <li className="py-2 md:py-0">
-                  <Link 
-                    to={ROUTES.DASHBOARD} 
+                  <Link
+                    to={ROUTES.DASHBOARD}
                     className="text-gray-700 hover:text-purple-600"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -74,8 +74,8 @@ const Header = () => {
                   </Link>
                 </li>
                 <li className="py-2 md:py-0">
-                  <Link 
-                    to={ROUTES.ANALYTICS} 
+                  <Link
+                    to={ROUTES.ANALYTICS}
                     className="text-gray-700 hover:text-purple-600"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -83,8 +83,17 @@ const Header = () => {
                   </Link>
                 </li>
                 <li className="py-2 md:py-0">
-                  <Link 
-                    to={ROUTES.CREATE_VIDEO} 
+                  <Link
+                    to={ROUTES.SOCIAL_MEDIA}
+                    className="text-gray-700 hover:text-purple-600"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Social Media
+                  </Link>
+                </li>
+                <li className="py-2 md:py-0">
+                  <Link
+                    to={ROUTES.CREATE_VIDEO}
                     className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -95,14 +104,14 @@ const Header = () => {
                   <div className="flex items-center cursor-pointer">
                     <div className="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center">
                       {currentUser.user_metadata?.avatar_url ? (
-                        <img 
-                          src={currentUser.user_metadata.avatar_url} 
-                          alt="Profile" 
+                        <img
+                          src={currentUser.user_metadata.avatar_url}
+                          alt="Profile"
                           className="w-8 h-8 rounded-full"
                         />
                       ) : (
                         <span>
-                          {currentUser.user_metadata?.name?.charAt(0) || 
+                          {currentUser.user_metadata?.name?.charAt(0) ||
                            currentUser.email?.charAt(0).toUpperCase()}
                         </span>
                       )}
@@ -112,14 +121,14 @@ const Header = () => {
                     </svg>
                   </div>
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
-                    <Link 
-                      to={ROUTES.PROFILE} 
+                    <Link
+                      to={ROUTES.PROFILE}
                       className="block px-4 py-2 text-gray-700 hover:bg-purple-100"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Profile
                     </Link>
-                    <button 
+                    <button
                       onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
                       className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-purple-100"
                     >
@@ -132,8 +141,8 @@ const Header = () => {
               // Links for non-authenticated users
               <>
                 <li className="py-2 md:py-0">
-                  <Link 
-                    to={ROUTES.LOGIN} 
+                  <Link
+                    to={ROUTES.LOGIN}
                     className="text-gray-700 hover:text-purple-600"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -141,8 +150,8 @@ const Header = () => {
                   </Link>
                 </li>
                 <li className="py-2 md:py-0">
-                  <Link 
-                    to={ROUTES.SIGNUP} 
+                  <Link
+                    to={ROUTES.SIGNUP}
                     className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
                     onClick={() => setMobileMenuOpen(false)}
                   >

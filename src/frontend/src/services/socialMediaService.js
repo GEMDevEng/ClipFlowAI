@@ -1,8 +1,187 @@
 /**
- * Share a video to social media platforms
- * Note: Due to API restrictions, most social media platforms don't allow direct posting
- * without user authentication. These functions will generate sharing links instead.
+ * Social Media Service
+ *
+ * This service handles the integration with various social media platforms
+ * through the backend API and provides sharing functionality.
  */
+import axios from 'axios';
+import { supabase } from '../config/supabase';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+/**
+ * Get all connected platforms for a user
+ * @param {string} userId - User ID
+ * @returns {Promise<Array>} - Array of connected platforms
+ */
+export const getConnectedPlatforms = async (userId) => {
+  try {
+    const { data, error } = await supabase
+      .from('social_platforms')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (error) throw new Error(error.message);
+
+    return data;
+  } catch (error) {
+    console.error('Error getting connected platforms:', error);
+    throw error;
+  }
+};
+
+/**
+ * Connect to a social media platform
+ * @param {string} userId - User ID
+ * @param {string} platform - Platform name (youtube, tiktok, instagram, etc.)
+ * @param {string} authCode - Authorization code from OAuth flow
+ * @returns {Promise<Object>} - Connection result
+ */
+export const connectPlatform = async (userId, platform, authCode) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/social/connect`, {
+      user_id: userId,
+      platform,
+      auth_code: authCode
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error connecting to ${platform}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Disconnect from a social media platform
+ * @param {string} userId - User ID
+ * @param {string} platformId - Platform ID
+ * @returns {Promise<Object>} - Disconnection result
+ */
+export const disconnectPlatform = async (userId, platformId) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/social/disconnect`, {
+      user_id: userId,
+      platform_id: platformId
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error disconnecting platform ${platformId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get the status of a connected platform
+ * @param {string} userId - User ID
+ * @param {string} platformId - Platform ID
+ * @returns {Promise<Object>} - Platform status
+ */
+export const getPlatformStatus = async (userId, platformId) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/social/status/${platformId}`, {
+      params: { user_id: userId }
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error getting status for platform ${platformId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Refresh the access token for a platform
+ * @param {string} userId - User ID
+ * @param {string} platformId - Platform ID
+ * @returns {Promise<Object>} - Refresh result
+ */
+export const refreshPlatformToken = async (userId, platformId) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/social/refresh`, {
+      user_id: userId,
+      platform_id: platformId
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error refreshing token for platform ${platformId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Publish a video to social media platforms
+ * @param {string} userId - User ID
+ * @param {string} videoId - Video ID
+ * @param {Array<string>} platforms - Array of platform names to publish to
+ * @param {Object} options - Publishing options
+ * @returns {Promise<Object>} - Publishing result
+ */
+export const publishVideo = async (userId, videoId, platforms, options = {}) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/social/publish`, {
+      user_id: userId,
+      video_id: videoId,
+      platforms,
+      options
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error publishing video ${videoId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Schedule a video for publishing
+ * @param {string} userId - User ID
+ * @param {string} videoId - Video ID
+ * @param {Array<string>} platforms - Array of platform names to publish to
+ * @param {Date} publishDate - Date to publish the video
+ * @param {Object} options - Publishing options
+ * @returns {Promise<Object>} - Scheduling result
+ */
+export const scheduleVideo = async (userId, videoId, platforms, publishDate, options = {}) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/social/schedule`, {
+      user_id: userId,
+      video_id: videoId,
+      platforms,
+      publish_date: publishDate.toISOString(),
+      options
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error scheduling video ${videoId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get publishing history for a user
+ * @param {string} userId - User ID
+ * @param {Object} filters - Filters for the history
+ * @returns {Promise<Array>} - Publishing history
+ */
+export const getPublishingHistory = async (userId, filters = {}) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/social/history`, {
+      params: {
+        user_id: userId,
+        ...filters
+      }
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error getting publishing history:', error);
+    throw error;
+  }
+};
 
 /**
  * Generate a TikTok sharing link

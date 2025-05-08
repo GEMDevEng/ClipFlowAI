@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   AUTH: '/api/auth',
   ANALYTICS: '/api/analytics',
   PAYMENT: '/api/payment',
+  SOCIAL: '/api/social',
 };
 
 // Local storage keys
@@ -107,6 +108,7 @@ export const ROUTES = {
   VIDEO_DETAILS: '/videos/:id',
   PROFILE: '/profile',
   ANALYTICS: '/analytics',
+  SOCIAL_MEDIA: '/social',
   NOT_FOUND: '/404',
 };
 

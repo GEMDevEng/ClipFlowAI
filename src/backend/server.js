@@ -46,6 +46,7 @@ app.use('/api/videos', require('./routes/videos'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
+app.use('/api/social', require('./routes/social'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

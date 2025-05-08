@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { ROUTES } from '../config/constants';
+import { useAuth } from '../../context/AuthContext';
+import { ROUTES } from '../../config/constants';
 
 /**
  * Private route component that requires authentication

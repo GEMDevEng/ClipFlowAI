@@ -1,4 +1,4 @@
-import { supabase } from '../supabase/config';
+import { supabase } from '../config/supabase';
 
 /**
  * Check if the current IP is rate limited for a specific action
@@ -10,15 +10,15 @@ export const checkRateLimit = async (email = null, attemptType) => {
   try {
     // Get client IP (this will be the server IP in production, but works for demo)
     const ipAddress = '127.0.0.1'; // In a real app, you'd get this from the server
-    
+
     const { data, error } = await supabase.rpc('check_auth_rate_limit', {
       p_ip_address: ipAddress,
       p_email: email,
       p_attempt_type: attemptType
     });
-    
+
     if (error) throw error;
-    
+
     return data; // true if allowed, false if rate limited
   } catch (error) {
     console.error('Error checking rate limit:', error);
@@ -37,7 +37,7 @@ export const recordSuccessfulAuth = async (email, attemptType, userId) => {
   try {
     // Get client IP (this will be the server IP in production, but works for demo)
     const ipAddress = '127.0.0.1'; // In a real app, you'd get this from the server
-    
+
     await supabase.rpc('record_successful_auth', {
       p_ip_address: ipAddress,
       p_email: email,
@@ -62,9 +62,9 @@ export const getAuthHistory = async (userId) => {
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(10);
-    
+
     if (error) throw error;
-    
+
     return data;
   } catch (error) {
     console.error('Error getting auth history:', error);

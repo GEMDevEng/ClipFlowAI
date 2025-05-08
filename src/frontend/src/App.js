@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import Analytics from './pages/Analytics';
+import SocialMediaPage from './pages/SocialMediaPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import PrivateRoute from './components/common/PrivateRoute';
@@ -89,6 +90,12 @@ function App() {
               <Route path={ROUTES.ANALYTICS} element={
                 <PrivateRoute>
                   <Analytics />
+                </PrivateRoute>
+              } />
+
+              <Route path={ROUTES.SOCIAL_MEDIA} element={
+                <PrivateRoute>
+                  <SocialMediaPage />
                 </PrivateRoute>
               } />
 

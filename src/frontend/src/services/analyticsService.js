@@ -1,4 +1,4 @@
-import { supabase } from '../supabase/config';
+import { supabase } from '../config/supabase';
 
 /**
  * Fetch analytics data for a specific video from social media platforms
@@ -164,7 +164,7 @@ export const getVideoAnalytics = async (videoId) => {
 export const storeAnalyticsRecord = async (videoId, userId, platform, analyticsData) => {
   try {
     // Check if the analytics table exists
-    const { count, error: checkError } = await supabase
+    const { error: checkError } = await supabase
       .from('analytics')
       .select('*', { count: 'exact', head: true });
 
@@ -326,9 +326,7 @@ export const getAnalyticsOverTime = async (userId, days = 7) => {
 const simulatePlatformAnalytics = async (platform, videoId) => {
   // Generate random data based on the platform
   let viewsMultiplier = 1;
-  let likesRatio = 0.3;
-  let sharesRatio = 0.1;
-  let commentsRatio = 0.05;
+  let likesRatio, sharesRatio, commentsRatio;
 
   switch (platform.toLowerCase()) {
     case 'tiktok':
@@ -354,6 +352,13 @@ const simulatePlatformAnalytics = async (platform, videoId) => {
       likesRatio = 0.2;
       sharesRatio = 0.08;
       commentsRatio = 0.06;
+      break;
+    default:
+      // Use default values for other platforms
+      viewsMultiplier = 1.0;
+      likesRatio = 0.2;
+      sharesRatio = 0.05;
+      commentsRatio = 0.03;
       break;
   }
 
