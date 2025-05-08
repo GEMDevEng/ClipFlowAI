@@ -4,51 +4,42 @@
 const express = require('express');
 const router = express.Router();
 const { supabase } = require('../config/supabaseClient');
+const paymentController = require('../controllers/paymentController');
 
 /**
- * @route   POST /api/payment/create-checkout
+ * @route   POST /api/payment/create-payment-intent
+ * @desc    Create a payment intent
+ * @access  Private
+ */
+router.post('/create-payment-intent', paymentController.createPaymentIntent);
+
+/**
+ * @route   POST /api/payment/create-checkout-session
  * @desc    Create a checkout session
  * @access  Private
  */
-router.post('/create-checkout', async (req, res) => {
-  try {
-    const { userId, planId } = req.body;
-    
-    if (!userId || !planId) {
-      return res.status(400).json({ error: 'User ID and plan ID are required' });
-    }
-    
-    // In a real implementation, this would create a checkout session with a payment provider
-    // For now, we'll just return a mock response
-    
-    return res.status(200).json({
-      checkoutUrl: 'https://example.com/checkout/session123',
-      sessionId: 'session123'
-    });
-  } catch (error) {
-    console.error('Create checkout error:', error);
-    return res.status(500).json({ error: 'Server error during checkout creation' });
-  }
-});
+router.post('/create-checkout-session', paymentController.createCheckoutSession);
+
+/**
+ * @route   POST /api/payment/create-subscription
+ * @desc    Create a subscription
+ * @access  Private
+ */
+router.post('/create-subscription', paymentController.createSubscription);
+
+/**
+ * @route   POST /api/payment/create-customer
+ * @desc    Create a customer
+ * @access  Private
+ */
+router.post('/create-customer', paymentController.createCustomer);
 
 /**
  * @route   POST /api/payment/webhook
- * @desc    Handle payment webhook
+ * @desc    Handle webhook events from Stripe
  * @access  Public
  */
-router.post('/webhook', async (req, res) => {
-  try {
-    const event = req.body;
-    
-    // In a real implementation, this would verify and process the webhook
-    // For now, we'll just return a success response
-    
-    return res.status(200).json({ received: true });
-  } catch (error) {
-    console.error('Webhook error:', error);
-    return res.status(500).json({ error: 'Server error processing webhook' });
-  }
-});
+router.post('/webhook', express.raw({ type: 'application/json' }), paymentController.handleWebhook);
 
 /**
  * @route   GET /api/payment/plans
@@ -59,7 +50,7 @@ router.get('/plans', async (req, res) => {
   try {
     // In a real implementation, this would fetch plans from the database
     // For now, we'll return mock data
-    
+
     const plans = [
       {
         id: 'plan_basic',
@@ -99,7 +90,7 @@ router.get('/plans', async (req, res) => {
         ]
       }
     ];
-    
+
     return res.status(200).json(plans);
   } catch (error) {
     console.error('Get plans error:', error);
@@ -115,14 +106,14 @@ router.get('/plans', async (req, res) => {
 router.get('/subscription/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     if (!userId) {
       return res.status(400).json({ error: 'User ID is required' });
     }
-    
+
     // In a real implementation, this would fetch the subscription from the database
     // For now, we'll return mock data
-    
+
     const subscription = {
       id: 'sub123',
       userId,
@@ -132,7 +123,7 @@ router.get('/subscription/:userId', async (req, res) => {
       currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       cancelAtPeriodEnd: false
     };
-    
+
     return res.status(200).json(subscription);
   } catch (error) {
     console.error('Get subscription error:', error);

@@ -109,6 +109,9 @@ export const ROUTES = {
   PROFILE: '/profile',
   ANALYTICS: '/analytics',
   SOCIAL_MEDIA: '/social',
+  SUBSCRIPTION: '/subscription',
+  SUBSCRIPTION_SUCCESS: '/subscription/success',
+  SUBSCRIPTION_CANCEL: '/subscription/cancel',
   NOT_FOUND: '/404',
 };
 

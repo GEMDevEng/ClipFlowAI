@@ -184,6 +184,44 @@ export const getPublishingHistory = async (userId, filters = {}) => {
 };
 
 /**
+ * Get video status on all platforms
+ * @param {string} userId - User ID
+ * @param {string} videoId - Video ID
+ * @returns {Promise<Object>} - Video status data
+ */
+export const getVideoStatus = async (userId, videoId) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/social/video-status/${videoId}`, {
+      params: { user_id: userId }
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error getting status for video ${videoId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get video analytics from all platforms
+ * @param {string} userId - User ID
+ * @param {string} videoId - Video ID
+ * @returns {Promise<Object>} - Video analytics data
+ */
+export const getVideoAnalytics = async (userId, videoId) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/social/video-analytics/${videoId}`, {
+      params: { user_id: userId }
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error getting analytics for video ${videoId}:`, error);
+    throw error;
+  }
+};
+
+/**
  * Generate a TikTok sharing link
  * @param {string} videoUrl - URL of the video
  * @param {string} caption - Caption for the video

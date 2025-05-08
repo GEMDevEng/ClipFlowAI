@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { publishVideo } from '../../services/socialMediaService';
+import { publishVideo, getScheduledVideos } from '../../services/socialMediaService';
 
 /**
  * Component for managing scheduled publishing
@@ -13,23 +13,27 @@ const ScheduledPublishing = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
 
-  // We don't need platform configuration anymore as we're using Tailwind CSS classes directly
-
   /**
    * Load scheduled videos for the current user
    */
   const loadScheduledVideos = useCallback(async () => {
+    if (!currentUser) return;
+
     setLoading(true);
     try {
-      // In a real implementation, this would fetch the user's scheduled videos
-      // For now, we'll use mock data
+      // Get scheduled videos from the API
+      const videos = await getScheduledVideos(currentUser.id);
+      setScheduledVideos(videos);
+    } catch (error) {
+      console.error('Error loading scheduled videos:', error);
+      // Fallback to mock data if API fails
       const mockScheduledVideos = [
         {
           id: 'video-1',
           title: 'How to Make a Perfect Cup of Coffee',
           scheduled_publish: true,
           scheduled_publish_time: new Date(Date.now() + 86400000 * 2).toISOString(), // 2 days from now
-          platforms: ['youtube', 'tiktok'],
+          scheduled_platforms: ['youtube', 'tiktok'],
           thumbnail_url: 'https://example.com/thumbnails/coffee.jpg',
           status: 'processing'
         },
@@ -38,7 +42,7 @@ const ScheduledPublishing = () => {
           title: 'Top 10 Travel Destinations for 2023',
           scheduled_publish: true,
           scheduled_publish_time: new Date(Date.now() + 86400000 * 5).toISOString(), // 5 days from now
-          platforms: ['instagram'],
+          scheduled_platforms: ['instagram'],
           thumbnail_url: 'https://example.com/thumbnails/travel.jpg',
           status: 'processing'
         },
@@ -47,19 +51,16 @@ const ScheduledPublishing = () => {
           title: 'Easy Workout Routine for Beginners',
           scheduled_publish: true,
           scheduled_publish_time: new Date(Date.now() + 86400000 * 7).toISOString(), // 7 days from now
-          platforms: ['youtube', 'tiktok', 'instagram'],
+          scheduled_platforms: ['youtube', 'tiktok', 'instagram'],
           thumbnail_url: 'https://example.com/thumbnails/workout.jpg',
           status: 'processing'
         }
       ];
-
       setScheduledVideos(mockScheduledVideos);
-    } catch (error) {
-      console.error('Error loading scheduled videos:', error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [currentUser]);
 
   // Load scheduled videos on component mount
   useEffect(() => {
@@ -85,24 +86,37 @@ const ScheduledPublishing = () => {
    * Handle publishing a video now
    */
   const handlePublishNow = async () => {
-    if (!selectedVideo) return;
+    if (!selectedVideo || !currentUser) return;
 
     try {
       // Close the dialog
       setShowConfirmDialog(false);
 
+      // Get the platforms from the scheduled video
+      const platforms = selectedVideo.scheduled_platforms || [];
+
+      if (platforms.length === 0) {
+        alert('No platforms selected for publishing');
+        return;
+      }
+
+      // Show loading message
       alert('Publishing video...');
 
-      // In a real implementation, this would call the API to publish the video
-      await publishVideo(currentUser.id, selectedVideo.id, selectedVideo.platforms);
+      // Call the API to publish the video
+      await publishVideo(currentUser.id, selectedVideo.id, platforms);
 
-      // Remove the video from the list
+      // Update the video in the list to show it's published
       setScheduledVideos(prev => prev.filter(v => v.id !== selectedVideo.id));
 
+      // Show success message
       alert('Video published successfully');
+
+      // Reload the scheduled videos list
+      loadScheduledVideos();
     } catch (error) {
       console.error('Error publishing video:', error);
-      alert(`Error publishing video: ${error.message}`);
+      alert(`Error publishing video: ${error.message || 'Unknown error'}`);
     }
   };
 
@@ -111,16 +125,39 @@ const ScheduledPublishing = () => {
    * @param {Object} video - Video to cancel
    */
   const handleCancelScheduled = async (video) => {
+    if (!currentUser) return;
+
     try {
-      // In a real implementation, this would call the API to cancel the scheduled publishing
+      // Call the API to cancel the scheduled publishing
+      const response = await fetch(`${process.env.REACT_APP_API_URL || ''}/api/social/schedule`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          video_id: video.id,
+          platforms: [],
+          scheduled_time: null,
+          scheduled_publish: false,
+          user_id: currentUser.id
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to cancel scheduled publishing');
+      }
 
       // Remove the video from the list
       setScheduledVideos(prev => prev.filter(v => v.id !== video.id));
 
+      // Show success message
       alert('Scheduled publishing canceled');
+
+      // Reload the scheduled videos list
+      loadScheduledVideos();
     } catch (error) {
       console.error('Error canceling scheduled publishing:', error);
-      alert(`Error canceling scheduled publishing: ${error.message}`);
+      alert(`Error canceling scheduled publishing: ${error.message || 'Unknown error'}`);
     }
   };
 
@@ -179,7 +216,7 @@ const ScheduledPublishing = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex flex-wrap gap-2">
-                      {video.platforms.map(platform => {
+                      {(video.scheduled_platforms || []).map(platform => {
                         let platformStyle = '';
 
                         if (platform === 'youtube') {

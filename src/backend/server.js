@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 // Removed: const connectDB = require('./config/db');
 const telegramBot = require('./services/telegramBot');
 const analyticsCollector = require('./services/analyticsCollector');
-const socialMediaPublisher = require('./services/socialMediaPublisher');
+const schedulerService = require('./services/schedulerService');
 const { createClient } = require('@supabase/supabase-js');
 
 /**
@@ -96,59 +96,15 @@ const server = app.listen(PORT, async () => {
   // Start scheduler for publishing scheduled videos if Supabase credentials are provided
   if (supabase) {
     try {
-      // Function to check for scheduled videos and publish them
-      const checkScheduledVideos = async () => {
-        console.log('Checking for scheduled videos...');
+      // Initialize the scheduler service
+      schedulerService.initializeScheduler();
 
-        try {
-          // Get all videos that are scheduled to be published
-          const { data: videos, error } = await supabase
-            .from('videos')
-            .select('*')
-            .eq('scheduled_publish', true)
-            .eq('status', 'processing');
-
-          if (error) {
-            throw error;
-          }
-
-          if (videos && videos.length > 0) {
-            console.log(`Found ${videos.length} scheduled videos`);
-
-            // Process each scheduled video
-            const results = await socialMediaPublisher.processScheduledPublishing(videos);
-
-            // Update the status of published videos
-            for (const result of results) {
-              if (result && result.videoId) {
-                await supabase
-                  .from('videos')
-                  .update({ status: 'published', published_at: new Date().toISOString() })
-                  .eq('id', result.videoId);
-
-                console.log(`Updated status of video ${result.videoId} to published`);
-              }
-            }
-          } else {
-            console.log('No scheduled videos found');
-          }
-        } catch (error) {
-          console.error('Error checking scheduled videos:', error.message);
-        }
-      };
-
-      // Check for scheduled videos every 5 minutes
-      setInterval(checkScheduledVideos, 5 * 60 * 1000);
-
-      // Also check immediately on startup
-      checkScheduledVideos();
-
-      console.log('Scheduled video publisher started');
+      console.log('Scheduler service started');
     } catch (error) {
-      console.error('Scheduled video publisher initialization failed:', error.message);
+      console.error('Scheduler service initialization failed:', error.message);
     }
   } else {
-    console.log('No Supabase credentials provided, skipping scheduled video publisher');
+    console.log('No Supabase credentials provided, skipping scheduler service');
   }
 });
 
@@ -157,6 +113,37 @@ process.on('unhandledRejection', (err) => {
   console.log(`Error: ${err.message}`);
   // Close server & exit process
   server.close(() => process.exit(1));
+});
+
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+
+  // Stop the scheduler
+  if (schedulerService) {
+    schedulerService.stopScheduler();
+  }
+
+  // Close the server
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT signal received: closing HTTP server');
+
+  // Stop the scheduler
+  if (schedulerService) {
+    schedulerService.stopScheduler();
+  }
+
+  // Close the server
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
+  });
 });
 
 // Export app for testing purposes

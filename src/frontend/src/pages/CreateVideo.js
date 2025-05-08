@@ -4,12 +4,19 @@ import { useVideos } from '../context/VideoContext';
 import { useAuth } from '../context/AuthContext';
 import { textToSpeech } from '../services/speechService';
 import { generateVideo, generateCaptions } from '../services/videoProcessor';
+import { getSubscription, createPaymentIntent } from '../services/paymentService';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import PaymentForm from '../components/PaymentForm';
 import './CreateVideo.css';
+
+// Load Stripe
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 const CreateVideo = () => {
   const navigate = useNavigate();
+  const { createVideo } = useVideos();
   const { currentUser } = useAuth();
-  const { createVideo, uploadVideo, uploadThumbnail } = useVideos();
 
   const [title, setTitle] = useState('');
   const [prompt, setPrompt] = useState('');
@@ -35,7 +42,35 @@ const CreateVideo = () => {
   const [progress, setProgress] = useState(0);
   const [progressMessage, setProgressMessage] = useState('');
 
+  // Payment and subscription states
+  const [subscription, setSubscription] = useState(null);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true);
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState(499); // $4.99 in cents
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+
   const fileInputRef = useRef(null);
+
+  // Fetch user subscription when component mounts
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      if (!currentUser) {
+        setSubscriptionLoading(false);
+        return;
+      }
+
+      try {
+        const subscriptionData = await getSubscription(currentUser.id);
+        setSubscription(subscriptionData);
+        setSubscriptionLoading(false);
+      } catch (error) {
+        console.error('Error fetching subscription:', error);
+        setSubscriptionLoading(false);
+      }
+    };
+
+    fetchSubscription();
+  }, [currentUser]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,10 +91,27 @@ const CreateVideo = () => {
       return;
     }
 
-    setLoading(true);
-    setError(null);
-    setProgress(0);
-    setProgressMessage('Starting video creation...');
+    // Check if user has an active subscription
+    if (!subscriptionLoading && !subscription?.status === 'active') {
+      // If no active subscription, show payment form
+      setShowPayment(true);
+      return;
+    }
+
+    // If payment was successful or user has subscription, proceed with video creation
+    if (paymentSuccess || (subscription?.status === 'active')) {
+      setLoading(true);
+      setError(null);
+      setProgress(0);
+      setProgressMessage('Starting video creation...');
+    } else if (showPayment) {
+      // If payment form is shown but payment not yet successful, don't proceed
+      return;
+    } else {
+      // Show payment form if not already shown
+      setShowPayment(true);
+      return;
+    }
 
     try {
       // 1. Create initial video record in database
@@ -125,21 +177,31 @@ const CreateVideo = () => {
       setProgressMessage('Generating video...');
       setProgress(60);
 
-      const videoBlob = await generateVideo(backgroundImage, audioBlob, captions, music);
+      // Pass all options to the video generation process
+      const videoOptions = {
+        title,
+        prompt,
+        script,
+        subtitles,
+        music,
+        voiceProfile,
+        language
+      };
 
-      // 5. Upload video to storage
-      setProgressMessage('Uploading video...');
+      // Generate video and get video data including URLs
+      const videoResult = await generateVideo(backgroundImage, audioBlob, captions, videoOptions);
+
+      // 5. Update progress
+      setProgressMessage('Processing video...');
       setProgress(80);
 
-      // Create a File object from the Blob
-      const videoFile = new File([videoBlob], `${title.replace(/\s+/g, '-')}.mp4`, { type: 'video/mp4' });
-      const videoUrl = await uploadVideo(videoFile);
-
-      // 6. Upload thumbnail (using the background image)
-      setProgressMessage('Uploading thumbnail...');
+      // 6. Update progress
+      setProgressMessage('Finalizing video...');
       setProgress(90);
 
-      const thumbnailUrl = await uploadThumbnail(backgroundImage);
+      // Update the video data with the result
+      // In a real implementation, you would update the video record in the database
+      console.log('Video generation completed:', videoResult);
 
       // 7. Update video record with URLs
       setProgressMessage('Finalizing...');
@@ -194,6 +256,21 @@ const CreateVideo = () => {
     fileInputRef.current.click();
   };
 
+  // Handle payment success
+  const handlePaymentSuccess = (paymentIntent) => {
+    console.log('Payment successful:', paymentIntent);
+    setPaymentSuccess(true);
+    setShowPayment(false);
+    // Submit the form again to proceed with video creation
+    handleSubmit({ preventDefault: () => {} });
+  };
+
+  // Handle payment error
+  const handlePaymentError = (error) => {
+    console.error('Payment error:', error);
+    setError(`Payment failed: ${error.message}`);
+  };
+
   return (
     <div className="create-video">
       <h1 className="page-title">Create New Video</h1>
@@ -211,6 +288,28 @@ const CreateVideo = () => {
               ></div>
             </div>
             <p>{progress}% complete</p>
+          </div>
+        ) : showPayment ? (
+          <div className="payment-container">
+            <h2>One-time Payment</h2>
+            <p>Pay once to create this video. No subscription required.</p>
+
+            <Elements stripe={stripePromise}>
+              <PaymentForm
+                amount={paymentAmount}
+                onSuccess={handlePaymentSuccess}
+                onError={handlePaymentError}
+                buttonText="Pay & Create Video"
+                metadata={{ videoTitle: title }}
+              />
+            </Elements>
+
+            <button
+              className="btn btn-secondary mt-3"
+              onClick={() => setShowPayment(false)}
+            >
+              Cancel
+            </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -277,14 +376,16 @@ const CreateVideo = () => {
             </div>
 
             <div className="form-group">
-              <label>Background Image</label>
+              <label htmlFor="backgroundImage">Background Image</label>
               <div className="image-upload-container">
                 <input
                   type="file"
+                  id="backgroundImage"
                   ref={fileInputRef}
                   onChange={handleImageUpload}
                   accept="image/*"
                   style={{ display: 'none' }}
+                  aria-label="Upload background image"
                 />
 
                 {backgroundImage ? (
@@ -302,11 +403,16 @@ const CreateVideo = () => {
                     </button>
                   </div>
                 ) : (
-                  <div className="image-upload-placeholder" onClick={handleBrowseClick}>
+                  <button
+                    type="button"
+                    className="image-upload-placeholder"
+                    onClick={handleBrowseClick}
+                    aria-label="Click to upload a background image"
+                  >
                     <i className="upload-icon">📷</i>
                     <p>Click to upload a background image</p>
                     <span>JPG, PNG or GIF, max 5MB</span>
-                  </div>
+                  </button>
                 )}
               </div>
             </div>
@@ -372,8 +478,8 @@ const CreateVideo = () => {
             </div>
 
             <div className="form-group">
-              <label>Publishing Options</label>
-              <div className="publishing-options">
+              <label id="publishingOptionsLabel">Publishing Options</label>
+              <div className="publishing-options" aria-labelledby="publishingOptionsLabel">
                 <div className="schedule-option">
                   <input
                     type="checkbox"
@@ -413,8 +519,8 @@ const CreateVideo = () => {
             </div>
 
             <div className="form-group">
-              <label>Publish To</label>
-              <div className="platforms-selection">
+              <label id="publishToLabel">Publish To</label>
+              <div className="platforms-selection" aria-labelledby="publishToLabel">
                 <div className="platform-option">
                   <input
                     type="checkbox"

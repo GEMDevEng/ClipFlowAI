@@ -1,0 +1,177 @@
+.subscription-plans-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.subscription-plans-container h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 28px;
+}
+
+.plans-description {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #666;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.plan-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.plan-card.selected {
+  border: 2px solid #6772e5;
+  box-shadow: 0 8px 16px rgba(103, 114, 229, 0.2);
+}
+
+.plan-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.plan-header h3 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.plan-price {
+  font-size: 32px;
+  font-weight: bold;
+  color: #6772e5;
+  margin: 10px 0 0;
+}
+
+.plan-price span {
+  font-size: 16px;
+  font-weight: normal;
+  color: #999;
+}
+
+.plan-description {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.plan-features {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 30px;
+}
+
+.plan-features li {
+  padding: 8px 0;
+  color: #555;
+  position: relative;
+  padding-left: 25px;
+}
+
+.plan-features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #6772e5;
+  font-weight: bold;
+}
+
+.select-plan-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  color: white;
+  background-color: #6772e5;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.select-plan-button:hover {
+  background-color: #5469d4;
+}
+
+.select-plan-button.selected {
+  background-color: #4caf50;
+}
+
+.checkout-section {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.checkout-button {
+  padding: 15px 40px;
+  font-size: 18px;
+  color: white;
+  background-color: #6772e5;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checkout-button:hover:not(:disabled) {
+  background-color: #5469d4;
+}
+
+.checkout-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkout-note {
+  margin-top: 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.error {
+  color: #fa755a;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .plan-card {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

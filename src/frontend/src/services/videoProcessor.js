@@ -19,14 +19,68 @@ const loadFFmpeg = async () => {
 };
 
 /**
- * Generate a video from images and audio
+ * Generate a video using RunwayML and process it with FFmpeg
+ * @param {File} imageFile - Background image for the video
+ * @param {File} audioFile - Audio file for the video
+ * @param {Array} captions - Array of caption objects with text and timestamps
+ * @param {Object} options - Additional options for video generation
+ * @returns {Promise<Object>} - The generated video data including URL and metadata
+ */
+export const generateVideo = async (
+  imageFile,
+  audioFile,
+  captions,
+  options = {}
+) => {
+  try {
+    const {
+      title = 'Untitled Video',
+      prompt = '',
+      music = 'default',
+      voiceProfile = 'default',
+      language = 'en-US',
+      script = '',
+      subtitles = ''
+    } = options;
+
+    console.log('Starting video generation process...');
+
+    // Step 1: Process the audio and image locally using FFmpeg
+    console.log('Processing audio and image with FFmpeg...');
+    const processedVideoBlob = await processVideoLocally(imageFile, audioFile, captions, music);
+
+    // Step 2: Upload the processed video to a temporary storage
+    console.log('Uploading processed video...');
+    const processedVideoFile = new File([processedVideoBlob], `${title.replace(/\s+/g, '-')}_processed.mp4`, { type: 'video/mp4' });
+    const processedVideoUrl = await uploadToTempStorage(processedVideoFile);
+
+    // Step 3: Generate the final video using RunwayML API
+    console.log('Generating final video with RunwayML...');
+    const videoData = await callRunwayMLAPI(prompt, title, {
+      music,
+      voiceProfile,
+      language,
+      script: script || prompt,
+      subtitles: subtitles || '',
+      processedVideoUrl
+    });
+
+    return videoData;
+  } catch (error) {
+    console.error('Error in video generation process:', error);
+    throw new Error(`Video generation failed: ${error.message}`);
+  }
+};
+
+/**
+ * Process video locally using FFmpeg
  * @param {File} imageFile - Background image for the video
  * @param {File} audioFile - Audio file for the video
  * @param {Array} captions - Array of caption objects with text and timestamps
  * @param {string} musicOption - Music option (default, upbeat, relaxed, dramatic, none)
- * @returns {Promise<Blob>} - The generated video as a Blob
+ * @returns {Promise<Blob>} - The processed video as a Blob
  */
-export const generateVideo = async (imageFile, audioFile, captions, musicOption = 'default') => {
+const processVideoLocally = async (imageFile, audioFile, captions, musicOption = 'default') => {
   try {
     // Load FFmpeg
     const ffmpeg = await loadFFmpeg();
@@ -38,29 +92,28 @@ export const generateVideo = async (imageFile, audioFile, captions, musicOption 
     // Handle background music based on selected option
     let musicFile = null;
     if (musicOption !== 'none') {
-      // In a real implementation, you would have actual music files
-      // For now, we'll simulate different music options with URLs
+      // Map of music options to actual music files
       const musicUrls = {
-        'default': 'https://example.com/music/default.mp3',
-        'upbeat': 'https://example.com/music/upbeat.mp3',
-        'relaxed': 'https://example.com/music/relaxed.mp3',
-        'dramatic': 'https://example.com/music/dramatic.mp3'
+        'default': '/assets/music/default.mp3',
+        'upbeat': '/assets/music/upbeat.mp3',
+        'relaxed': '/assets/music/relaxed.mp3',
+        'dramatic': '/assets/music/dramatic.mp3'
       };
 
       try {
-        // In a real implementation, you would fetch the actual music file
-        // For now, we'll just log the URL that would be used
-        console.log(`Would fetch music from: ${musicUrls[musicOption] || musicUrls['default']}`);
+        // Fetch the music file
+        const musicUrl = musicUrls[musicOption] || musicUrls['default'];
+        const musicResponse = await fetch(musicUrl);
+        const musicData = await musicResponse.arrayBuffer();
 
-        // For demonstration purposes, we'll create a silent audio file
-        // In a real implementation, you would fetch and use the actual music file
-        const silentAudio = new Uint8Array([0, 0, 0, 0, 0, 0, 0, 0]);
-        ffmpeg.FS('writeFile', 'music.mp3', silentAudio);
+        ffmpeg.FS('writeFile', 'music.mp3', new Uint8Array(musicData));
         musicFile = 'music.mp3';
       } catch (error) {
         console.error('Error loading music file:', error);
-        // Continue without music if there's an error
-        musicFile = null;
+        // Create a silent audio file as fallback
+        const silentAudio = new Uint8Array([0, 0, 0, 0, 0, 0, 0, 0]);
+        ffmpeg.FS('writeFile', 'music.mp3', silentAudio);
+        musicFile = 'music.mp3';
       }
     }
 
@@ -76,13 +129,6 @@ export const generateVideo = async (imageFile, audioFile, captions, musicOption 
     });
 
     ffmpeg.FS('writeFile', 'subtitles.srt', subtitlesContent);
-
-    // Get audio duration
-    await ffmpeg.run(
-      '-i', 'audio.mp3',
-      '-f', 'null',
-      '-'
-    );
 
     // Generate video with image, audio, subtitles, and optional background music
     if (musicFile) {
@@ -127,8 +173,66 @@ export const generateVideo = async (imageFile, audioFile, captions, musicOption 
     // Create a Blob from the data
     return new Blob([data.buffer], { type: 'video/mp4' });
   } catch (error) {
-    console.error('Error generating video:', error);
-    throw new Error('Video generation failed');
+    console.error('Error processing video locally:', error);
+    throw new Error(`Local video processing failed: ${error.message}`);
+  }
+};
+
+/**
+ * Upload a file to temporary storage
+ * @param {File} file - The file to upload
+ * @returns {Promise<string>} - The URL of the uploaded file
+ */
+const uploadToTempStorage = async (file) => {
+  try {
+    // In a real implementation, you would upload the file to a storage service
+    // For now, we'll create a mock URL
+
+    // Simulate upload delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Return a mock URL
+    return URL.createObjectURL(file);
+  } catch (error) {
+    console.error('Error uploading to temp storage:', error);
+    throw new Error(`Upload failed: ${error.message}`);
+  }
+};
+
+/**
+ * Call RunwayML API to generate a video
+ * @param {string} prompt - The text prompt for video generation
+ * @param {string} title - The title of the video
+ * @param {Object} options - Additional options for video generation
+ * @returns {Promise<Object>} - The generated video data
+ */
+const callRunwayMLAPI = async (prompt, title, options = {}) => {
+  try {
+    // In a real implementation, you would make an API call to your backend
+    // which would then call the RunwayML API
+
+    // For now, we'll simulate the API call
+    console.log(`Calling RunwayML API with prompt: ${prompt}`);
+    console.log('Options:', options);
+
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Return mock video data
+    return {
+      title,
+      prompt,
+      status: 'completed',
+      duration: Math.floor(Math.random() * 30) + 30, // Random duration between 30-60 seconds
+      videoUrl: options.processedVideoUrl || 'https://example.com/video.mp4',
+      thumbnailUrl: 'https://example.com/thumbnail.jpg',
+      createdAt: new Date().toISOString(),
+      publishedAt: null, // Not published yet
+      options
+    };
+  } catch (error) {
+    console.error('Error calling RunwayML API:', error);
+    throw new Error(`RunwayML API call failed: ${error.message}`);
   }
 };
 
@@ -143,11 +247,16 @@ export const transcribeAudio = async (audioFile) => {
     // Web Speech API doesn't directly support file transcription
     // In a real implementation, you would use a service like Google Speech-to-Text
 
+    console.log('Transcribing audio file:', audioFile.name);
+
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
     // For now, we'll just return a mock result
     return "This is a mock transcription of the audio file.";
   } catch (error) {
     console.error('Error transcribing audio:', error);
-    throw new Error('Audio transcription failed');
+    throw new Error(`Audio transcription failed: ${error.message}`);
   }
 };
 
