@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import * as videoService from '../services/api/videoService';
-import * as storageService from '../services/storage/storageService';
+import videoService from '../services/video/videoService';
 import useAuth from './useAuth';
 
 /**
@@ -20,8 +19,8 @@ const useVideos = () => {
         try {
           setLoading(true);
           setError(null);
-          
-          const fetchedVideos = await videoService.getAllVideos(user.id);
+
+          const fetchedVideos = await videoService.getUserVideos();
           setVideos(fetchedVideos);
         } catch (err) {
           console.error('Error fetching videos:', err);
@@ -117,7 +116,7 @@ const useVideos = () => {
   }, []);
 
   // Upload a video file
-  const uploadVideo = useCallback(async (videoFile) => {
+  const uploadVideo = useCallback(async (videoBlob, fileName) => {
     try {
       setError(null);
 
@@ -125,7 +124,7 @@ const useVideos = () => {
         throw new Error('You must be logged in to upload a video');
       }
 
-      return await storageService.uploadVideo(videoFile, user.id);
+      return await videoService.uploadVideo(videoBlob, fileName);
     } catch (err) {
       setError(err.message);
       throw err;
@@ -133,7 +132,7 @@ const useVideos = () => {
   }, [user]);
 
   // Upload a thumbnail image
-  const uploadThumbnail = useCallback(async (imageFile) => {
+  const uploadThumbnail = useCallback(async (thumbnailBlob, videoId) => {
     try {
       setError(null);
 
@@ -141,7 +140,63 @@ const useVideos = () => {
         throw new Error('You must be logged in to upload a thumbnail');
       }
 
-      return await storageService.uploadThumbnail(imageFile, user.id);
+      return await videoService.uploadThumbnail(thumbnailBlob, videoId);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }, [user]);
+
+  // Generate a video
+  const generateVideo = useCallback(async (options) => {
+    try {
+      setError(null);
+
+      if (!user) {
+        throw new Error('You must be logged in to generate a video');
+      }
+
+      return await videoService.generateVideo(options);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }, [user]);
+
+  // Generate a thumbnail
+  const generateThumbnail = useCallback(async (videoFile, timeInSeconds = 0) => {
+    try {
+      setError(null);
+
+      return await videoService.generateThumbnail(videoFile, timeInSeconds);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }, []);
+
+  // Generate captions
+  const generateCaptions = useCallback(async (audioFile) => {
+    try {
+      setError(null);
+
+      return await videoService.generateCaptions(audioFile);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }, []);
+
+  // Publish a video
+  const publishVideo = useCallback(async (videoId, platform, options = {}) => {
+    try {
+      setError(null);
+
+      if (!user) {
+        throw new Error('You must be logged in to publish a video');
+      }
+
+      return await videoService.publishVideo(videoId, platform, options);
     } catch (err) {
       setError(err.message);
       throw err;
@@ -158,6 +213,10 @@ const useVideos = () => {
     deleteVideo,
     uploadVideo,
     uploadThumbnail,
+    generateVideo,
+    generateThumbnail,
+    generateCaptions,
+    publishVideo,
   };
 };
 

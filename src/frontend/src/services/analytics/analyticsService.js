@@ -1,11 +1,13 @@
 import { supabase } from '../../config/supabase';
+import * as databaseService from '../database/databaseService';
 
 // Table name
 const VIDEOS_TABLE = 'videos';
 const ANALYTICS_TABLE = 'analytics';
 
 /**
- * Analytics service for Supabase
+ * Analytics service for ClipFlowAI
+ * This service provides methods for retrieving and analyzing video performance data
  */
 
 /**
@@ -15,32 +17,8 @@ const ANALYTICS_TABLE = 'analytics';
  */
 export const getVideoAnalytics = async (videoId) => {
   try {
-    // First try to get analytics from the analytics table
-    const { data: analyticsData, error: analyticsError } = await supabase
-      .from(ANALYTICS_TABLE)
-      .select('*')
-      .eq('video_id', videoId)
-      .order('date', { ascending: false });
-
-    if (analyticsError) {
-      console.error('Error fetching from analytics table:', analyticsError);
-      
-      // Fallback to getting analytics from the videos table
-      const { data: videoData, error: videoError } = await supabase
-        .from(VIDEOS_TABLE)
-        .select('views, likes, shares')
-        .eq('id', videoId)
-        .single();
-
-      if (videoError) {
-        throw videoError;
-      }
-
-      return {
-        current: videoData || { views: 0, likes: 0, shares: 0 },
-        history: []
-      };
-    }
+    // First try to get analytics from the analytics table using our database service
+    const analyticsData = await databaseService.getVideoAnalytics(videoId);
 
     // Get the current analytics from the videos table
     const { data: currentData, error: currentError } = await supabase
@@ -94,7 +72,7 @@ export const getOverallAnalytics = async (userId) => {
       totalViews += item.views || 0;
       totalLikes += item.likes || 0;
       totalShares += item.shares || 0;
-      
+
       videoStats.push({
         id: item.id,
         title: item.title,
@@ -133,7 +111,7 @@ export const getAnalyticsHistory = async (userId, period = 'week') => {
     // Calculate the start date based on the period
     const now = new Date();
     let startDate = new Date();
-    
+
     switch (period) {
       case 'day':
         startDate.setDate(now.getDate() - 1);
@@ -181,10 +159,10 @@ export const getAnalyticsHistory = async (userId, period = 'week') => {
 
     // Group analytics by date
     const groupedByDate = {};
-    
+
     history.forEach(item => {
       const date = item.date.split('T')[0]; // Extract YYYY-MM-DD
-      
+
       if (!groupedByDate[date]) {
         groupedByDate[date] = {
           date,
@@ -193,7 +171,7 @@ export const getAnalyticsHistory = async (userId, period = 'week') => {
           shares: 0
         };
       }
-      
+
       groupedByDate[date].views += item.views || 0;
       groupedByDate[date].likes += item.likes || 0;
       groupedByDate[date].shares += item.shares || 0;

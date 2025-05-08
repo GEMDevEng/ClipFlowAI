@@ -18,6 +18,7 @@ import { AuthProvider } from './context/AuthContext';
 import { VideoProvider } from './context/VideoContext';
 import { ROUTES } from './config/constants';
 import { initFFmpeg } from './services/video/videoProcessor';
+import { initializeDatabase } from './services/database/databaseInitializer';
 import './App.css';
 
 /**
@@ -25,17 +26,27 @@ import './App.css';
  * @returns {JSX.Element} - App component
  */
 function App() {
-  // Initialize FFmpeg when the app loads
+  // Initialize FFmpeg and database when the app loads
   useEffect(() => {
-    const loadFFmpeg = async () => {
+    const initialize = async () => {
       try {
+        // Initialize FFmpeg
         await initFFmpeg();
+        console.log('FFmpeg initialized successfully');
+
+        // Initialize database
+        const dbInitialized = await initializeDatabase();
+        if (dbInitialized) {
+          console.log('Database initialized successfully');
+        } else {
+          console.warn('Database initialization failed. Some features may not work correctly.');
+        }
       } catch (error) {
-        console.error('Error initializing FFmpeg:', error);
+        console.error('Initialization error:', error);
       }
     };
 
-    loadFFmpeg();
+    initialize();
   }, []);
 
   return (

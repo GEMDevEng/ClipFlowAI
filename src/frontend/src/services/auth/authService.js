@@ -1,8 +1,10 @@
-import { supabase } from '../../config/supabase';
+import { supabase, refreshSession } from '../../config/supabase';
 import { ERROR_MESSAGES } from '../../config/constants';
 
 /**
  * Authentication service for Supabase
+ * This service provides methods for user authentication and management
+ * using the Supabase Auth API.
  */
 
 /**
@@ -29,12 +31,12 @@ export const signUp = async (email, password, metadata = {}) => {
     return data;
   } catch (error) {
     console.error('Sign up error:', error);
-    
+
     // Handle specific error cases
     if (error.message.includes('already registered')) {
       throw new Error(ERROR_MESSAGES.AUTH.EMAIL_IN_USE);
     }
-    
+
     throw error;
   }
 };
@@ -59,12 +61,12 @@ export const signIn = async (email, password) => {
     return data;
   } catch (error) {
     console.error('Sign in error:', error);
-    
+
     // Handle specific error cases
     if (error.message.includes('Invalid login credentials')) {
       throw new Error(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
     }
-    
+
     throw error;
   }
 };
@@ -205,5 +207,18 @@ export const onAuthStateChange = (callback) => {
   } catch (error) {
     console.error('Auth state change error:', error);
     return () => {};
+  }
+};
+
+/**
+ * Refresh the current session
+ * @returns {Promise<object|null>} - Updated session data or null
+ */
+export const refreshCurrentSession = async () => {
+  try {
+    return await refreshSession();
+  } catch (error) {
+    console.error('Refresh session error:', error);
+    return null;
   }
 };
