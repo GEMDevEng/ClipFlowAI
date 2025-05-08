@@ -82,6 +82,14 @@ const ScheduledPublishing = () => {
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
   };
 
+  // State for publishing status
+  const [publishingStatus, setPublishingStatus] = useState({
+    isPublishing: false,
+    videoId: null,
+    success: null,
+    error: null
+  });
+
   /**
    * Handle publishing a video now
    */
@@ -96,12 +104,22 @@ const ScheduledPublishing = () => {
       const platforms = selectedVideo.scheduled_platforms || [];
 
       if (platforms.length === 0) {
-        alert('No platforms selected for publishing');
+        setPublishingStatus({
+          isPublishing: false,
+          videoId: selectedVideo.id,
+          success: false,
+          error: 'No platforms selected for publishing'
+        });
         return;
       }
 
-      // Show loading message
-      alert('Publishing video...');
+      // Set publishing status
+      setPublishingStatus({
+        isPublishing: true,
+        videoId: selectedVideo.id,
+        success: null,
+        error: null
+      });
 
       // Call the API to publish the video
       await publishVideo(currentUser.id, selectedVideo.id, platforms);
@@ -109,16 +127,46 @@ const ScheduledPublishing = () => {
       // Update the video in the list to show it's published
       setScheduledVideos(prev => prev.filter(v => v.id !== selectedVideo.id));
 
-      // Show success message
-      alert('Video published successfully');
+      // Set success status
+      setPublishingStatus({
+        isPublishing: false,
+        videoId: selectedVideo.id,
+        success: true,
+        error: null
+      });
+
+      // Clear status after 5 seconds
+      setTimeout(() => {
+        setPublishingStatus({
+          isPublishing: false,
+          videoId: null,
+          success: null,
+          error: null
+        });
+      }, 5000);
 
       // Reload the scheduled videos list
       loadScheduledVideos();
     } catch (error) {
       console.error('Error publishing video:', error);
-      alert(`Error publishing video: ${error.message || 'Unknown error'}`);
+
+      // Set error status
+      setPublishingStatus({
+        isPublishing: false,
+        videoId: selectedVideo.id,
+        success: false,
+        error: error.message || 'Unknown error'
+      });
     }
   };
+
+  // State for cancellation status
+  const [cancelStatus, setCancelStatus] = useState({
+    isCanceling: false,
+    videoId: null,
+    success: null,
+    error: null
+  });
 
   /**
    * Handle canceling a scheduled publishing
@@ -128,6 +176,14 @@ const ScheduledPublishing = () => {
     if (!currentUser) return;
 
     try {
+      // Set canceling status
+      setCancelStatus({
+        isCanceling: true,
+        videoId: video.id,
+        success: null,
+        error: null
+      });
+
       // Call the API to cancel the scheduled publishing
       const response = await fetch(`${process.env.REACT_APP_API_URL || ''}/api/social/schedule`, {
         method: 'POST',
@@ -150,14 +206,36 @@ const ScheduledPublishing = () => {
       // Remove the video from the list
       setScheduledVideos(prev => prev.filter(v => v.id !== video.id));
 
-      // Show success message
-      alert('Scheduled publishing canceled');
+      // Set success status
+      setCancelStatus({
+        isCanceling: false,
+        videoId: video.id,
+        success: true,
+        error: null
+      });
+
+      // Clear status after 5 seconds
+      setTimeout(() => {
+        setCancelStatus({
+          isCanceling: false,
+          videoId: null,
+          success: null,
+          error: null
+        });
+      }, 5000);
 
       // Reload the scheduled videos list
       loadScheduledVideos();
     } catch (error) {
       console.error('Error canceling scheduled publishing:', error);
-      alert(`Error canceling scheduled publishing: ${error.message || 'Unknown error'}`);
+
+      // Set error status
+      setCancelStatus({
+        isCanceling: false,
+        videoId: video.id,
+        success: false,
+        error: error.message || 'Unknown error'
+      });
     }
   };
 
@@ -186,11 +264,61 @@ const ScheduledPublishing = () => {
         <button
           onClick={loadScheduledVideos}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center"
+          disabled={loading}
         >
-          <i className="fas fa-sync-alt mr-2" aria-hidden="true"></i>
-          <span>Refresh</span>
+          {loading ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Refreshing...</span>
+            </>
+          ) : (
+            <>
+              <i className="fas fa-sync-alt mr-2" aria-hidden="true"></i>
+              <span>Refresh</span>
+            </>
+          )}
         </button>
       </div>
+
+      {/* Status notifications */}
+      {publishingStatus.success && (
+        <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-md flex items-center">
+          <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Video published successfully!</span>
+        </div>
+      )}
+
+      {publishingStatus.error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-md flex items-center">
+          <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Error publishing video: {publishingStatus.error}</span>
+        </div>
+      )}
+
+      {cancelStatus.success && (
+        <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-md flex items-center">
+          <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Scheduled publishing canceled successfully!</span>
+        </div>
+      )}
+
+      {cancelStatus.error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-md flex items-center">
+          <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Error canceling scheduled publishing: {cancelStatus.error}</span>
+        </div>
+      )}
 
       {scheduledVideos.length === 0 ? (
         <div className="text-center py-10 bg-gray-50 rounded-md">
@@ -247,12 +375,26 @@ const ScheduledPublishing = () => {
                       <button
                         className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 flex items-center"
                         onClick={() => openPublishDialog(video)}
+                        disabled={publishingStatus.isPublishing || cancelStatus.isCanceling}
                       >
-                        <i className="fas fa-play mr-1" aria-hidden="true"></i>
-                        <span>Publish Now</span>
+                        {publishingStatus.isPublishing && publishingStatus.videoId === video.id ? (
+                          <>
+                            <svg className="animate-spin -ml-1 mr-1 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span>Publishing...</span>
+                          </>
+                        ) : (
+                          <>
+                            <i className="fas fa-play mr-1" aria-hidden="true"></i>
+                            <span>Publish Now</span>
+                          </>
+                        )}
                       </button>
                       <button
                         className="px-3 py-1 border border-blue-500 text-blue-500 rounded hover:bg-blue-50 flex items-center"
+                        disabled={publishingStatus.isPublishing || cancelStatus.isCanceling}
                       >
                         <i className="fas fa-edit mr-1" aria-hidden="true"></i>
                         <span>Edit</span>
@@ -260,9 +402,22 @@ const ScheduledPublishing = () => {
                       <button
                         className="px-3 py-1 border border-red-500 text-red-500 rounded hover:bg-red-50 flex items-center"
                         onClick={() => handleCancelScheduled(video)}
+                        disabled={publishingStatus.isPublishing || cancelStatus.isCanceling}
                       >
-                        <i className="fas fa-trash mr-1" aria-hidden="true"></i>
-                        <span>Cancel</span>
+                        {cancelStatus.isCanceling && cancelStatus.videoId === video.id ? (
+                          <>
+                            <svg className="animate-spin -ml-1 mr-1 h-4 w-4 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span>Canceling...</span>
+                          </>
+                        ) : (
+                          <>
+                            <i className="fas fa-trash mr-1" aria-hidden="true"></i>
+                            <span>Cancel</span>
+                          </>
+                        )}
                       </button>
                     </div>
                   </td>

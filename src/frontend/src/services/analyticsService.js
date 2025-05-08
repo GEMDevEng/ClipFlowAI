@@ -203,16 +203,24 @@ export const storeAnalyticsRecord = async (videoId, userId, platform, analyticsD
 /**
  * Get analytics data for all videos of a user, grouped by platform
  * @param {string} userId - User ID
+ * @param {string|null} platformFilter - Optional platform to filter by
  * @returns {Promise<object>} - Analytics data by platform
  */
-export const getAnalyticsByPlatform = async (userId) => {
+export const getAnalyticsByPlatform = async (userId, platformFilter = null) => {
   try {
-    // Get analytics data grouped by platform
-    const { data, error } = await supabase
+    // Build query
+    let query = supabase
       .from('analytics')
       .select('platform, views, likes, shares, comments')
-      .eq('user_id', userId)
-      .order('date', { ascending: false });
+      .eq('user_id', userId);
+
+    // Add platform filter if specified
+    if (platformFilter) {
+      query = query.eq('platform', platformFilter);
+    }
+
+    // Execute query
+    const { data, error } = await query.order('date', { ascending: false });
 
     if (error) throw error;
 
@@ -243,6 +251,17 @@ export const getAnalyticsByPlatform = async (userId) => {
     // Convert the map to an array
     const result = Object.values(platformMap);
 
+    // If no data is found but we have a platform filter, return a default entry for that platform
+    if (result.length === 0 && platformFilter) {
+      return [{
+        platform: platformFilter,
+        views: 0,
+        likes: 0,
+        shares: 0,
+        comments: 0
+      }];
+    }
+
     return result;
   } catch (error) {
     console.error('Error getting analytics by platform:', error);
@@ -254,16 +273,37 @@ export const getAnalyticsByPlatform = async (userId) => {
  * Get analytics data for a user's videos over time
  * @param {string} userId - User ID
  * @param {number} days - Number of days to include
+ * @param {Object|null} customDateRange - Custom date range with start and end dates
  * @returns {Promise<Array>} - Array of data points with date and metrics
  */
-export const getAnalyticsOverTime = async (userId, days = 7) => {
+export const getAnalyticsOverTime = async (userId, days = 7, customDateRange = null) => {
   try {
-    // Get analytics data for the specified time period
+    // Determine start and end dates
+    let startDate, endDate = new Date();
+
+    if (customDateRange && customDateRange.start && customDateRange.end) {
+      // Use custom date range
+      startDate = new Date(customDateRange.start);
+      endDate = new Date(customDateRange.end);
+      // Set end date to end of day
+      endDate.setHours(23, 59, 59, 999);
+
+      // Calculate days for filling in missing dates
+      days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    } else {
+      // Use days parameter
+      startDate = new Date();
+      startDate.setDate(startDate.getDate() - (days - 1));
+      startDate.setHours(0, 0, 0, 0);
+    }
+
+    // Build query
     const { data, error } = await supabase
       .from('analytics')
-      .select('date, views, likes, shares')
+      .select('date, views, likes, shares, comments')
       .eq('user_id', userId)
-      .gte('date', new Date(new Date().setDate(new Date().getDate() - days)).toISOString())
+      .gte('date', startDate.toISOString())
+      .lte('date', endDate.toISOString())
       .order('date', { ascending: true });
 
     if (error) throw error;
@@ -279,22 +319,28 @@ export const getAnalyticsOverTime = async (userId, days = 7) => {
           date: dateStr,
           views: 0,
           likes: 0,
-          shares: 0
+          shares: 0,
+          comments: 0
         };
       }
 
-      dateMap[dateStr].views += item.views;
-      dateMap[dateStr].likes += item.likes;
-      dateMap[dateStr].shares += item.shares;
+      dateMap[dateStr].views += item.views || 0;
+      dateMap[dateStr].likes += item.likes || 0;
+      dateMap[dateStr].shares += item.shares || 0;
+      dateMap[dateStr].comments += item.comments || 0;
     });
 
     // Convert the map to an array and ensure all dates are included
     const result = [];
-    const today = new Date();
 
-    for (let i = days - 1; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
+    // Generate all dates in the range
+    for (let i = 0; i < days; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+
+      // Skip if we've gone past the end date
+      if (date > endDate) break;
+
       const dateStr = date.toISOString().split('T')[0];
 
       if (dateMap[dateStr]) {
@@ -305,7 +351,8 @@ export const getAnalyticsOverTime = async (userId, days = 7) => {
           date: dateStr,
           views: 0,
           likes: 0,
-          shares: 0
+          shares: 0,
+          comments: 0
         });
       }
     }
